@@ -1436,11 +1436,11 @@
                             ${highlightsHtml}
                             <div class="hero-actions">
                                 ${data.hero.callToActions ? data.hero.callToActions.map(action => `
-                                    <a href="${action.link}" role="button" class="${action.primary ? 'btn-primary' : 'btn-secondary'}">
+                                    <a href="${action.link}" role="button" class="${action.primary ? 'btn-primary' : 'btn-secondary'}" ${action.link.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>
                                         ${action.text}
                                     </a>
                                 `).join('') : ''}
-                                ${data.hero.callToAction ? `<a href="${data.hero.callToAction.link}" role="button">${data.hero.callToAction.text}</a>` : ''}
+                                ${data.hero.callToAction ? `<a href="${data.hero.callToAction.link}" role="button" ${data.hero.callToAction.link.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>${data.hero.callToAction.text}</a>` : ''}
                             </div>
                         </header>
                     `;
@@ -1481,12 +1481,23 @@
             }
 
             /**
+             * Processes markdown-style links [text](url) in paragraph text
+             */
+            function processMarkdownLinks(text) {
+                return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+                    const isExternal = url.startsWith('http://') || url.startsWith('https://');
+                    const attributes = isExternal ? ' target="_blank" rel="noopener"' : '';
+                    return `<a href="${url}"${attributes}>${text}</a>`;
+                });
+            }
+
+            /**
              * Renders a single content block based on its type
              */
             function renderContentBlock(block) {
                 switch (block.type) {
                     case 'paragraph':
-                        return `<p>${block.value}</p>`;
+                        return `<p>${processMarkdownLinks(block.value)}</p>`;
                     case 'image':
                         return `<figure>
                                     <img src="${block.value.src}" alt="${block.value.alt}">
@@ -2713,7 +2724,7 @@
             },
             "link": {
               "type": "string",
-              "description": "An anchor link, e.g., '#section-id'"
+              "description": "A link URL - either an anchor link (e.g., '#section-id') or external URL (e.g., 'https://example.com')"
             }
           },
           "required": [

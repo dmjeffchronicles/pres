@@ -91,6 +91,49 @@ Control section order with custom navigation:
 }
 ```
 
+### External Links
+
+Add external links that open in new tabs:
+
+```json
+{
+  "hero": {
+    "callToActions": [
+      {
+        "text": "Visit Website",
+        "link": "https://example.com",
+        "primary": true
+      }
+    ]
+  }
+}
+```
+
+External URLs (starting with `http://` or `https://`) automatically open in new tabs with proper security attributes.
+
+### Links in Content
+
+Add clickable links within your paragraph text using markdown syntax:
+
+```json
+{
+  "sections": [
+    {
+      "id": "about",
+      "title": "About Us",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Visit our [company website](https://example.com) to learn more about our services."
+        }
+      ]
+    }
+  ]
+}
+```
+
+Links are automatically detected and formatted with proper external link handling.
+
 ### Hero Section
 
 Add a compelling introduction:

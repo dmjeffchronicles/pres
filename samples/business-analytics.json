@@ -12,7 +12,6 @@
     }
   },
   "navigation": {
-    "mode": "ordered",
     "order": [
       "key-metrics",
       "revenue-analysis",
@@ -21,36 +20,23 @@
       "market-analysis",
       "recommendations",
       "glossary"
-    ],
-    "graph": {
-      "startId": "key-metrics",
-      "edges": [
-        { "from": "key-metrics", "to": "revenue-analysis", "description": "analyzes revenue drivers behind metrics" },
-        { "from": "revenue-analysis", "to": "growth-trends", "description": "examines historical performance patterns" },
-        { "from": "growth-trends", "to": "customer-insights", "description": "connects trends to customer behavior" },
-        { "from": "customer-insights", "to": "market-analysis", "description": "places customer data in market context" },
-        { "from": "market-analysis", "to": "recommendations", "description": "translates analysis into actionable strategies" },
-        { "from": "recommendations", "to": "glossary", "description": "explains analytical terminology" },
-        { "from": "key-metrics", "to": "market-analysis", "description": "direct path for strategic overview", "label": "Skip to market analysis" }
-      ],
-      "defaultPath": [
-        "key-metrics",
-        "revenue-analysis",
-        "growth-trends",
-        "customer-insights",
-        "market-analysis",
-        "recommendations",
-        "glossary"
-      ]
-    }
+    ]
   },
   "hero": {
     "title": "Q4 Performance Analytics",
     "subtitle": "Data-driven insights for strategic decision making and growth optimization.",
-    "callToAction": {
-      "text": "Explore Metrics",
-      "link": "#key-metrics"
-    }
+    "callToActions": [
+      {
+        "text": "📊 Explore Metrics",
+        "link": "#key-metrics",
+        "primary": true
+      },
+      {
+        "text": "🔗 View Live Dashboard",
+        "link": "https://analytics.example.com",
+        "primary": false
+      }
+    ]
   },
   "glossary": [
     { "term": "CAC", "definition": "Customer Acquisition Cost: The total cost of acquiring a new customer." },
@@ -147,7 +133,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "Based on the Q4 analytics, we recommend focusing on three key areas for continued growth and market leadership."
+          "value": "Based on the Q4 analytics, we recommend focusing on three key areas for continued growth and market leadership. For detailed implementation plans, see our [strategic roadmap](https://strategy.example.com) and the [customer retention study](#customer-insights)."
         },
         {
           "type": "kpi-grid",

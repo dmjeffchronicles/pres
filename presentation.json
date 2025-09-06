@@ -1,5 +1,5 @@
 {
-  "title": "Rapport Financier Trimestriel - Desjardins",
+  "title": "Rapport Financier Trimestriel - SAMPLE",
   "theme": {
     "mode": "auto",
     "colors": {
@@ -12,7 +12,6 @@
     }
   },
   "navigation": {
-    "mode": "graph",
     "order": [
       "introduction",
       "indicateurs-cles",
@@ -21,29 +20,7 @@
       "lancement-initiative",
       "conclusions-cles",
       "glossaire"
-    ],
-    "graph": {
-      "startId": "introduction",
-      "edges": [
-        { "from": "introduction", "to": "indicateurs-cles", "description": "presents key metrics after context" },
-        { "from": "indicateurs-cles", "to": "initiatives-strategiques", "description": "explores initiatives driving the metrics" },
-        { "from": "initiatives-strategiques", "to": "expansion-numerique", "description": "dives into the main strategic initiative" },
-        { "from": "initiatives-strategiques", "to": "lancement-initiative", "description": "alternative path to initiative launch details" },
-        { "from": "expansion-numerique", "to": "conclusions-cles", "description": "connects initiative outcomes to conclusions" },
-        { "from": "lancement-initiative", "to": "conclusions-cles", "description": "connects initiative launch to conclusions" },
-        { "from": "conclusions-cles", "to": "glossaire", "description": "provides terminology reference" },
-        { "from": "introduction", "to": "initiatives-strategiques", "description": "shortcut for experienced viewers", "label": "Skip to initiatives" }
-      ],
-      "defaultPath": [
-        "introduction",
-        "indicateurs-cles",
-        "initiatives-strategiques",
-        "expansion-numerique",
-        "lancement-initiative",
-        "conclusions-cles",
-        "glossaire"
-      ]
-    }
+    ]
   },
   "hero": {
     "title": "Rapport Financier T3 2024",
@@ -75,6 +52,11 @@
         "text": "🎯 Voir les Initiatives Stratégiques",
         "link": "#initiatives-strategiques",
         "primary": false
+      },
+      {
+        "text": "🌐 Visiter Notre Site Web",
+        "link": "https://example.com",
+        "primary": false
       }
     ]
   },
@@ -92,7 +74,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "Ce rapport trimestriel présente un aperçu complet des performances de Desjardins au cours du troisième trimestre 2024. Nous analyserons les métriques d'engagement client, les résultats financiers, et l'avancement de nos initiatives stratégiques clés. Notre objectif est de fournir une perspective claire et basée sur les données de notre position actuelle et de notre trajectoire future."
+          "value": "Ce rapport trimestriel présente un aperçu complet des performances de SAMPLE au cours du troisième trimestre 2024. Nous analyserons les métriques d'engagement client, les résultats financiers, et l'avancement de nos initiatives stratégiques clés. Notre objectif est de fournir une perspective claire et basée sur les données de notre position actuelle et de notre trajectoire future."
         },
         {
           "type": "blockquote",
@@ -170,7 +152,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "Sur la base des données du T3 et des tendances positives des IPC, nous recommandons d'allouer des ressources supplémentaires à l'initiative d'amélioration des services numériques, qui a démontré le RSI le plus élevé. Notre faible taux d'attrition des membres témoigne de la qualité de nos services. Nous présenterons un plan détaillé lors de la prochaine séance stratégique."
+          "value": "Sur la base des données du T3 et des tendances positives des IPC, nous recommandons d'allouer des ressources supplémentaires à l'initiative d'amélioration des services numériques, qui a démontré le RSI le plus élevé. Notre faible taux d'attrition des membres témoigne de la qualité de nos services. Consultez notre [portail client](https://client.example.com) pour plus de détails sur les initiatives en cours. Nous présenterons un plan détaillé lors de la prochaine séance stratégique."
         }
       ]
     },

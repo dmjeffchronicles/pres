@@ -141,25 +141,25 @@
               "required": ["metric", "value", "label"]
             }
           },
-          "callToAction": {
+        "callToAction": {
+          "type": "object",
+          "properties": {
+            "text": { "type": "string" },
+            "link": { "type": "string", "description": "A link URL - either an anchor link (e.g., '#section-id') or external URL (e.g., 'https://example.com')" }
+          },
+          "required": ["text", "link"]
+        },
+          "callToActions": {
+            "type": "array",
+          "items": {
             "type": "object",
             "properties": {
               "text": { "type": "string" },
-              "link": { "type": "string", "description": "An anchor link, e.g., '#section-id'" }
+              "link": { "type": "string", "description": "A link URL - either an anchor link (e.g., '#section-id') or external URL (e.g., 'https://example.com')" },
+              "primary": { "type": "boolean", "description": "Whether this is the primary action button" }
             },
             "required": ["text", "link"]
-          },
-          "callToActions": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "text": { "type": "string" },
-                "link": { "type": "string", "description": "An anchor link, e.g., '#section-id'" },
-                "primary": { "type": "boolean", "description": "Whether this is the primary action button" }
-              },
-              "required": ["text", "link"]
-            }
+          }
           }
         },
         "required": ["title", "subtitle"]
