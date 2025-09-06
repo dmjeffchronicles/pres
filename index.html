@@ -925,6 +925,87 @@
             border-left: 2px solid var(--pico-muted-border-color);
         }
 
+        .landing-hero {
+            text-align: center;
+            padding: 6rem 1rem 2rem;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 60%, transparent) 0%, transparent 100%);
+            border-radius: var(--pico-border-radius);
+        }
+        .landing-brand {
+            display: inline-block;
+            font-weight: 800;
+            letter-spacing: .02em;
+            color: var(--primary);
+            margin-bottom: .5rem;
+        }
+        .landing-sub {
+            color: var(--text-secondary);
+            margin: 0 auto 1.5rem;
+            max-width: 60ch;
+        }
+        .landing-actions {
+            display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;
+        }
+
+        .landing-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 0.25rem;
+            background: var(--surface);
+            border: 1px solid var(--secondary);
+            border-radius: var(--pico-border-radius);
+            padding: 0.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn {
+            padding: 0.375rem 0.75rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: calc(var(--pico-border-radius) - 2px);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            min-width: 2.5rem;
+        }
+
+        .lang-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        
+        .btn-primary, .btn-secondary {
+            display: inline-block; padding: .75rem 1.25rem; border-radius: var(--pico-border-radius);
+            text-decoration: none; border: 1px solid transparent; cursor: pointer;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { filter: brightness(0.95); }
+        .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--secondary); }
+        .btn-secondary:hover { background: color-mix(in srgb, var(--surface) 85%, var(--secondary)); }
+        .info-chips { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+        .chip { padding: .35rem .6rem; border: 1px solid var(--secondary); border-radius: 999px; font-size: .9rem; color: var(--text-secondary); }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .card { background: var(--surface); border: 1px solid var(--secondary); border-radius: var(--pico-border-radius); padding: 1rem; }
+        .fade-in { animation: fadeIn .4s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -1018,6 +1099,45 @@
             // AbortController for cleaning up event listeners on reload
             let abortController = new AbortController();
 
+            // Simple translation dictionary for landing page
+            const translations = {
+                en: {
+                    title: "Load Your Presentation JSON",
+                    subtitle: "Local, secure, and fully open source. No servers. No tracking. Works on GitHub Pages.",
+                    select: "Select JSON",
+                    github: "View on GitHub",
+                    chipLocal: "🔒 All local",
+                    chipJson: "🧩 JSON-driven",
+                    chipMermaid: "🖼️ Mermaid supported",
+                    chipLicense: "📄 MIT License",
+                    howTitle: "How it works",
+                    howCopy: "Click <strong>Select JSON</strong> to render your presentation instantly. Or host this page on GitHub Pages and pass <code>?data=URL</code> to a JSON file.",
+                    secTitle: "Security",
+                    secCopy: "Everything runs in your browser. No data leaves your machine. External links open in a new tab with <code>rel=\"noopener\"</code>.",
+                    licTitle: "License",
+                    licCopy: "Distributed under the <strong>MIT License</strong>. See <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> for details."
+                },
+                fr: {
+                    title: "Chargez votre JSON de présentation",
+                    subtitle: "Local, sécurisé et entièrement open source. Aucun serveur. Aucun suivi. Fonctionne sur GitHub Pages.",
+                    select: "Sélectionner JSON",
+                    github: "Voir sur GitHub",
+                    chipLocal: "🔒 Tout local",
+                    chipJson: "🧩 Piloté par JSON",
+                    chipMermaid: "🖼️ Mermaid supporté",
+                    chipLicense: "📄 Licence MIT",
+                    howTitle: "Comment ça marche",
+                    howCopy: "Cliquez sur <strong>Sélectionner JSON</strong> pour rendre votre présentation instantanément. Ou hébergez cette page sur GitHub Pages et passez <code>?data=URL</code> à un fichier JSON.",
+                    secTitle: "Sécurité",
+                    secCopy: "Tout fonctionne dans votre navigateur. Aucune donnée ne quitte votre machine. Les liens externes s'ouvrent dans un nouvel onglet avec <code>rel=\"noopener\"</code>.",
+                    licTitle: "Licence",
+                    licCopy: "Distribué sous la <strong>licence MIT</strong>. Voir <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> pour les détails."
+                }
+            };
+
+            // Current language for landing page (independent of presentation)
+            let currentLandingLanguage = 'fr'; // Default to French to match the page
+
             // Throttle utility function for scroll performance
             function throttle(func, limit) {
                 let inThrottle;
@@ -1051,6 +1171,63 @@
             }
 
             /**
+             * Applies translations to landing page elements
+             */
+            function applyLandingTranslations(language) {
+                const langData = translations[language];
+                if (!langData) return;
+
+                // Update all elements with data-i18n attributes
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (langData[key]) {
+                        if (element.tagName === 'INPUT' && element.type === 'submit') {
+                            element.value = langData[key];
+                        } else {
+                            element.innerHTML = langData[key];
+                        }
+                    }
+                });
+
+                // Update language button states
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === language);
+                });
+
+                // Store preference
+                localStorage.setItem('landing-language', language);
+            }
+
+            /**
+             * Sets up landing page language toggle
+             */
+            function setupLandingLanguageToggle() {
+                const langBtns = document.querySelectorAll('.lang-btn');
+
+                langBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const lang = btn.getAttribute('data-lang');
+                        if (lang && translations[lang]) {
+                            currentLandingLanguage = lang;
+                            applyLandingTranslations(lang);
+                        }
+                    });
+                });
+
+                // Load saved preference
+                const savedLang = localStorage.getItem('landing-language');
+                if (savedLang && translations[savedLang]) {
+                    currentLandingLanguage = savedLang;
+                    applyLandingTranslations(savedLang);
+                } else {
+                    // Apply default language
+                    applyLandingTranslations(currentLandingLanguage);
+                }
+            }
+
+            
+
+            /**
              * Loads presentation data from various sources
              */
             async function loadPresentationData(uploadedData = null) {
@@ -1066,19 +1243,12 @@
                         const response = await fetch(dataParam);
                         if (response.ok) { const data = await response.json(); return data; }
                     } catch (error) {
-                        
+                        // Ignore and fall through to landing page
                     }
                 }
 
-                // Try to load from presentation.json
-                try {
-                    const response = await fetch('./presentation.json');
-                    if (response.ok) { const data = await response.json(); return data; } else {
-                        throw new Error(`Failed to load presentation.json: ${response.status} ${response.statusText}`);
-                    }
-                } catch (error) {
-                    throw new Error('Unable to load presentation data. Please ensure presentation.json is available.');
-                }
+                // No default load path: force landing page
+                throw new Error('No presentation provided. Upload a JSON file or pass ?data=URL to begin.');
             }
 
             /**
@@ -1182,22 +1352,53 @@
                     // Setup interactive elements after content is loaded
                     setTimeout(setupInteractiveElements, 500);
                 } catch (error) {
+                    const repoUrl = getGitHubRepoUrl();
                     config.contentEl.innerHTML = `
-                        <article>
-                            <h2 style="color: var(--pico-del-color)">No Presentation Data Found</h2>
-                            <p>${error.message}</p>
-                            <p>Please upload a presentation JSON file to get started.</p>
-                            <div style="margin-top: 2rem;">
-                                <input type="file" id="fallback-json-input" accept=".json" style="display: block; margin-bottom: 1rem;">
-                                <button id="fallback-upload-btn" class="btn-primary" style="padding: 0.75rem 1.5rem; background: var(--pico-primary); color: var(--pico-primary-inverse); border: none; border-radius: var(--pico-border-radius); cursor: pointer;">
-                                    Load Presentation File
-                                </button>
+                        <section class="landing-hero fade-in">
+                            <div class="landing-controls">
+                                <div class="lang-switch" role="group" aria-label="Language">
+                                    <button class="lang-btn" data-lang="en">EN</button>
+                                    <button class="lang-btn" data-lang="fr">FR</button>
+                                </div>
                             </div>
-                        </article>
+                            <div class="landing-brand">📑 Narrative Presentation</div>
+                            <h1 data-i18n="title">Load Your Presentation JSON</h1>
+                            <p class="landing-sub" data-i18n="subtitle">Local, secure, and fully open source. No servers. No tracking. Works on GitHub Pages.</p>
+                            <div class="landing-actions">
+                                <input type="file" id="fallback-json-input" accept=".json" style="display:none;">
+                                <button id="fallback-upload-btn" class="btn-primary" data-i18n="select">Select JSON</button>
+                                ${repoUrl ? `<a href="${repoUrl}" target="_blank" rel="noopener" class="btn-secondary" data-i18n="github">View on GitHub</a>` : ''}
+                                <a href="README.md" target="_blank" rel="noopener" class="btn-secondary">README</a>
+                            </div>
+                            <div class="info-chips">
+                                <span class="chip" data-i18n="chipLocal">🔒 All local</span>
+                                <span class="chip" data-i18n="chipJson">🧩 JSON-driven</span>
+                                <span class="chip" data-i18n="chipMermaid">🖼️ Mermaid supported</span>
+                                <span class="chip" data-i18n="chipLicense">📄 MIT License</span>
+                            </div>
+                        </section>
+
+                        <section class="feature-grid fade-in" style="animation-delay: .1s;">
+                            <article class="card">
+                                <h3 data-i18n="howTitle">How it works</h3>
+                                <p data-i18n="howCopy">Click <strong>Select JSON</strong> to render your presentation instantly. Or host this page on GitHub Pages and pass <code>?data=URL</code> to a JSON file.</p>
+                            </article>
+                            <article class="card">
+                                <h3 data-i18n="secTitle">Security</h3>
+                                <p data-i18n="secCopy">Everything runs in your browser. No data leaves your machine. External links open in a new tab with <code>rel=\"noopener\"</code>.</p>
+                            </article>
+                            <article class="card">
+                                <h3 data-i18n="licTitle">License</h3>
+                                <p data-i18n="licCopy">Distributed under the <strong>MIT License</strong>. See <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> for details.</p>
+                            </article>
+                        </section>
                     `;
 
                     // Setup fallback upload functionality
                     setupFallbackUpload();
+
+                    // Setup landing page toggles
+                    setupLandingLanguageToggle();
                 }
             }
 
@@ -1237,17 +1438,25 @@
 
                         // Initialize with uploaded data (navigation processing happens in init)
                         await init(jsonData);
-
-                        
-
-                    } catch (error) {
-                        
-                        alert(`Error loading presentation file: ${error.message}`);
-                        uploadBtn.textContent = 'Load Presentation File';
+                    } catch (err) {
+                        alert(err.message || 'Failed to load the selected file.');
+                    } finally {
+                        uploadBtn.textContent = 'Upload JSON';
                         uploadBtn.disabled = false;
                         fileInput.value = '';
                     }
                 });
+            }
+
+            function getGitHubRepoUrl() {
+                if (window.GITHUB_REPO_URL) return window.GITHUB_REPO_URL;
+                const { host, pathname } = window.location;
+                if (!host.endsWith('github.io')) return '';
+                const parts = pathname.split('/').filter(Boolean);
+                const user = host.split('.')[0];
+                const repo = parts.length > 0 ? parts[0] : '';
+                if (!user || !repo) return '';
+                return `https://github.com/${user}/${repo}`;
             }
 
             /**

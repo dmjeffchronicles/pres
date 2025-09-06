@@ -23,7 +23,10 @@ presentation-system/
 │   └── mermaid.min.js  # Diagram rendering
 └── samples/            # Example presentations
     ├── business-analytics.json
-    └── innovation-roadmap.json
+    ├── innovation-roadmap.json
+    ├── product-launch.json
+    ├── team-culture.json
+    └── technical-architecture.json
 ```
 
 ## 🎨 Creating Your Presentation
