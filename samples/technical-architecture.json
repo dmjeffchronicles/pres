@@ -1,0 +1,198 @@
+{
+  "title": "System Architecture & Technical Deep Dive",
+  "theme": {
+    "mode": "light",
+    "colors": {
+      "primary": "#059669",
+      "primary-background": "#059669",
+      "primary-inverse": "#FFF",
+      "primary-focus": "rgba(5, 150, 105, 0.25)"
+    }
+  },
+  "navigation": {
+    "mode": "ordered",
+    "order": [
+      "system-overview",
+      "microservices",
+      "service-communication",
+      "data-architecture",
+      "scalability",
+      "security",
+      "monitoring",
+      "deployment",
+      "glossary"
+    ],
+    "graph": {
+      "startId": "system-overview",
+      "edges": [
+        { "from": "system-overview", "to": "microservices" },
+        { "from": "microservices", "to": "service-communication" },
+        { "from": "service-communication", "to": "data-architecture" },
+        { "from": "data-architecture", "to": "scalability" },
+        { "from": "scalability", "to": "security" },
+        { "from": "security", "to": "monitoring" },
+        { "from": "monitoring", "to": "deployment" },
+        { "from": "deployment", "to": "glossary" },
+        { "from": "system-overview", "to": "scalability", "label": "Skip to scalability" },
+        { "from": "scalability", "to": "deployment", "label": "Skip security & monitoring" }
+      ],
+      "defaultPath": [
+        "system-overview",
+        "microservices",
+        "service-communication",
+        "data-architecture",
+        "scalability",
+        "security",
+        "monitoring",
+        "deployment",
+        "glossary"
+      ]
+    }
+  },
+  "hero": {
+    "title": "CloudScale Architecture",
+    "subtitle": "Enterprise-grade distributed systems designed for scale, reliability, and performance.",
+    "callToAction": {
+      "text": "Explore Architecture",
+      "link": "#system-overview"
+    }
+  },
+  "glossary": [
+    { "term": "Microservices", "definition": "Architectural style that structures an application as a collection of small, independent services." },
+    { "term": "Event-Driven", "definition": "Architecture pattern where components communicate through events and messages." },
+    { "term": "CQRS", "definition": "Command Query Responsibility Segregation: Pattern separating read and write operations." },
+    { "term": "Kubernetes", "definition": "Open-source platform for automating deployment, scaling, and management of containerized applications." },
+    { "term": "Service Mesh", "definition": "Infrastructure layer for handling service-to-service communication." }
+  ],
+  "sections": [
+    {
+      "id": "system-overview",
+      "title": "System Architecture Overview",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "CloudScale implements a modern distributed architecture that ensures high availability, scalability, and maintainability. The system is built on microservices principles with event-driven communication patterns."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TB\n    subgraph \"Client Layer\"\n        A[Web App]\n        B[Mobile App]\n        C[API Gateway]\n    end\n    \n    subgraph \"Application Layer\"\n        D[Auth Service]\n        E[User Service]\n        F[Business Logic]\n        G[Analytics Service]\n    end\n    \n    subgraph \"Data Layer\"\n        H[(PostgreSQL)]\n        I[(Redis Cache)]\n        J[(Elasticsearch)]\n        K[(S3 Storage)]\n    end\n    \n    subgraph \"Infrastructure\"\n        L[Kubernetes]\n        M[Service Mesh]\n        N[Load Balancer]\n        O[Monitoring]\n    end\n    \n    A --> C\n    B --> C\n    C --> D\n    C --> E\n    C --> F\n    F --> G\n    D --> H\n    E --> H\n    F --> H\n    G --> J\n    F --> I\n    G --> K\n    \n    D --> L\n    E --> L\n    F --> L\n    G --> L\n    L --> M\n    M --> N\n    L --> O"
+        }
+      ]
+    },
+    {
+      "id": "microservices",
+      "title": "Microservices Architecture",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our microservices architecture allows for independent deployment, scaling, and maintenance of individual components while maintaining system coherence."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[API Gateway] --> B[Auth Service]\n    A --> C[User Management]\n    A --> D[Order Service]\n    A --> E[Payment Service]\n    A --> F[Notification Service]\n    \n    B --> G[(Auth DB)]\n    C --> H[(User DB)]\n    D --> I[(Order DB)]\n    E --> J[(Payment DB)]\n    \n    D --> K{Message Queue}\n    K --> F\n    E --> K\n    \n    style A fill:#10b981\n    style B fill:#059669\n    style C fill:#047857\n    style D fill:#065f46\n    style E fill:#064e3b\n    style F fill:#022c22"
+        }
+      ],
+      "subsections": [
+        {
+          "id": "service-communication",
+          "title": "Service Communication Patterns",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "Services communicate through a combination of synchronous REST APIs and asynchronous event-driven messaging."
+            },
+            {
+              "type": "mermaid",
+              "value": "sequenceDiagram\n    participant Client\n    participant Gateway\n    participant Auth\n    participant User\n    participant Queue\n    \n    Client->>Gateway: Login Request\n    Gateway->>Auth: Validate Credentials\n    Auth-->>Gateway: JWT Token\n    Gateway-->>Client: Token Response\n    \n    Client->>Gateway: User Profile Request\n    Gateway->>User: Get Profile\n    User-->>Gateway: Profile Data\n    Gateway-->>Client: Profile Response\n    \n    User->>Queue: User Updated Event\n    Queue->>Auth: Update Cache\n    Queue->>Gateway: Invalidate Cache"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-architecture",
+      "title": "Data Architecture & Storage",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our data strategy employs polyglot persistence with different storage solutions optimized for specific use cases."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Application Data] --> B[(PostgreSQL)]\n    A --> C[(MongoDB)]\n    A --> D[(Redis)]\n    A --> E[(Elasticsearch)]\n    A --> F[(S3)]\n    \n    B --> G[Relational Data]\n    C --> H[Document Data]\n    D --> I[Caching Layer]\n    E --> J[Search & Analytics]\n    F --> K[File Storage]\n    \n    style B fill:#3b82f6\n    style C fill:#1d4ed8\n    style D fill:#1e40af\n    style E fill:#1e3a8a\n    style F fill:#172554"
+        }
+      ]
+    },
+    {
+      "id": "scalability",
+      "title": "Scalability & Performance",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "The architecture is designed to handle millions of requests while maintaining sub-second response times through intelligent caching and load distribution."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Concurrent Users", "value": "1M+" },
+            { "label": "Response Time", "value": "< 200ms" },
+            { "label": "Uptime SLA", "value": "99.99%" },
+            { "label": "Auto-scaling", "value": "Instant" },
+            { "label": "Global CDN", "value": "6 Regions" },
+            { "label": "Data Replication", "value": "Multi-AZ" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "Security Architecture",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Security is implemented at every layer with defense-in-depth principles, including network segmentation, encryption, and continuous monitoring."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Internet] --> B[WAF & DDoS Protection]\n    B --> C[Load Balancer]\n    C --> D[API Gateway]\n    D --> E[Authentication]\n    E --> F[Authorization]\n    F --> G[Service Layer]\n    \n    G --> H[Encryption at Rest]\n    G --> I[Network Security]\n    G --> J[Audit Logging]\n    \n    K[Security Monitoring] --> B\n    K --> D\n    K --> G\n    \n    style A fill:#dc2626\n    style B fill:#ea580c\n    style C fill:#d97706\n    style D fill:#65a30d\n    style E fill:#059669\n    style F fill:#0891b2\n    style G fill:#2563eb"
+        }
+      ]
+    },
+    {
+      "id": "monitoring",
+      "title": "Monitoring & Observability",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Comprehensive monitoring ensures system health, performance optimization, and rapid incident response."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Application Metrics] --> B[Prometheus]\n    C[Infrastructure] --> B\n    D[Logs] --> E[ELK Stack]\n    F[Traces] --> G[Jaeger]\n    \n    B --> H[Grafana Dashboards]\n    E --> H\n    G --> H\n    \n    H --> I[Alert Manager]\n    I --> J[Slack Notifications]\n    I --> K[PagerDuty]\n    \n    style B fill:#7c3aed\n    style E fill:#db2777\n    style G fill:#c2410c\n    style H fill:#059669"
+        }
+      ]
+    },
+    {
+      "id": "deployment",
+      "title": "Deployment & CI/CD",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Automated deployment pipelines ensure consistent, reliable releases with comprehensive testing and rollback capabilities."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[Code Commit] --> B[Build Pipeline]\n    B --> C[Unit Tests]\n    C --> D[Integration Tests]\n    D --> E[Security Scan]\n    E --> F[Container Build]\n    F --> G[Deploy to Staging]\n    G --> H[E2E Tests]\n    H --> I[Deploy to Production]\n    I --> J[Monitoring & Alerts]\n    \n    style A fill:#16a34a\n    style B fill:#ca8a04\n    style C fill:#dc2626\n    style D fill:#7c2d12\n    style E fill:#7c3aed\n    style F fill:#0891b2\n    style G fill:#059669\n    style H fill:#dc2626\n    style I fill:#16a34a\n    style J fill:#2563eb"
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Technical Glossary",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}
+

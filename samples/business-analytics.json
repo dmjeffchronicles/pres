@@ -1,0 +1,171 @@
+{
+  "title": "Q4 Business Analytics Dashboard",
+  "theme": {
+    "mode": "auto",
+    "colors": {
+      "primary": "#60a5fa",
+      "secondary": "#a1a1aa",
+      "background": "#1a1a1a",
+      "surface": "#2a2a2a",
+      "text": "#ffffff",
+      "text-secondary": "#a1a1aa"
+    }
+  },
+  "navigation": {
+    "mode": "ordered",
+    "order": [
+      "key-metrics",
+      "revenue-analysis",
+      "growth-trends",
+      "customer-insights",
+      "market-analysis",
+      "recommendations",
+      "glossary"
+    ],
+    "graph": {
+      "startId": "key-metrics",
+      "edges": [
+        { "from": "key-metrics", "to": "revenue-analysis", "description": "analyzes revenue drivers behind metrics" },
+        { "from": "revenue-analysis", "to": "growth-trends", "description": "examines historical performance patterns" },
+        { "from": "growth-trends", "to": "customer-insights", "description": "connects trends to customer behavior" },
+        { "from": "customer-insights", "to": "market-analysis", "description": "places customer data in market context" },
+        { "from": "market-analysis", "to": "recommendations", "description": "translates analysis into actionable strategies" },
+        { "from": "recommendations", "to": "glossary", "description": "explains analytical terminology" },
+        { "from": "key-metrics", "to": "market-analysis", "description": "direct path for strategic overview", "label": "Skip to market analysis" }
+      ],
+      "defaultPath": [
+        "key-metrics",
+        "revenue-analysis",
+        "growth-trends",
+        "customer-insights",
+        "market-analysis",
+        "recommendations",
+        "glossary"
+      ]
+    }
+  },
+  "hero": {
+    "title": "Q4 Performance Analytics",
+    "subtitle": "Data-driven insights for strategic decision making and growth optimization.",
+    "callToAction": {
+      "text": "Explore Metrics",
+      "link": "#key-metrics"
+    }
+  },
+  "glossary": [
+    { "term": "CAC", "definition": "Customer Acquisition Cost: The total cost of acquiring a new customer." },
+    { "term": "LTV", "definition": "Customer Lifetime Value: The total revenue expected from a customer over their relationship with the company." },
+    { "term": "Churn Rate", "definition": "The percentage of customers who stop using a service over a given period." },
+    { "term": "MRR", "definition": "Monthly Recurring Revenue: The predictable revenue generated each month." }
+  ],
+  "sections": [
+    {
+      "id": "key-metrics",
+      "title": "Key Performance Metrics",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our Q4 performance shows significant improvement across all major business metrics. The data indicates strong market positioning and effective growth strategies."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Revenue Growth", "value": "+127%" },
+            { "label": "Customer Acquisition", "value": "3,240" },
+            { "label": "Churn Rate", "value": "2.1%" },
+            { "label": "MRR", "value": "$89K" },
+            { "label": "CAC", "value": "$127" },
+            { "label": "LTV", "value": "$2,340" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revenue-analysis",
+      "title": "Revenue Analysis",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Revenue streams have diversified significantly, with subscription models now accounting for 78% of total revenue. This shift to recurring revenue has improved predictability and reduced cash flow volatility."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Revenue Breakdown Q4\n    \"Subscriptions\" : 78\n    \"One-time Sales\" : 15\n    \"Services\" : 5\n    \"Other\" : 2"
+        }
+      ],
+      "subsections": [
+        {
+          "id": "growth-trends",
+          "title": "Growth Trends",
+          "content": [
+            {
+              "type": "mermaid",
+              "value": "graph TD\n    A[Q1 2024] --> B[Q2 2024: +23%]\n    B --> C[Q3 2024: +45%]\n    C --> D[Q4 2024: +127%]\n    D --> E[Q1 2025: Projected +95%]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "customer-insights",
+      "title": "Customer Insights",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Customer behavior analysis reveals key patterns that inform our product development and marketing strategies."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[Website Visit] --> B[Product Demo: 34%]\n    B --> C[Free Trial: 68%]\n    C --> D[Paid Customer: 23%]\n    B --> E[Exit: 32%]\n    C --> F[Churn: 12%]"
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "The best way to predict the future is to create it.",
+            "cite": "Peter Drucker"
+          }
+        }
+      ]
+    },
+    {
+      "id": "market-analysis",
+      "title": "Market Position Analysis",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Competitive analysis shows our market share has grown from 12% to 18% in the past quarter, positioning us as the second-largest player in our segment."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Market Leaders] --> B[Company A: 28%]\n    A --> C[Our Company: 18%]\n    A --> D[Company C: 15%]\n    A --> E[Others: 39%]"
+        }
+      ]
+    },
+    {
+      "id": "recommendations",
+      "title": "Strategic Recommendations",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Based on the Q4 analytics, we recommend focusing on three key areas for continued growth and market leadership."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Product Expansion", "value": "Priority 1" },
+            { "label": "Market Penetration", "value": "Priority 2" },
+            { "label": "Customer Retention", "value": "Priority 3" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Terminology Guide",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}
+

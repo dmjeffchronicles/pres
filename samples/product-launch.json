@@ -1,0 +1,214 @@
+{
+  "title": "Project Aurora: Product Launch Presentation",
+  "theme": {
+    "mode": "dark",
+    "colors": {
+      "primary": "#8b5cf6",
+      "primary-background": "#8b5cf6",
+      "primary-inverse": "#FFF",
+      "primary-focus": "rgba(139, 92, 246, 0.25)"
+    }
+  },
+  "navigation": {
+    "mode": "ordered",
+    "order": [
+      "vision",
+      "key-features",
+      "neural-sync",
+      "user-experience",
+      "market-opportunity",
+      "launch-strategy",
+      "competitive-advantage",
+      "testimonials",
+      "glossary"
+    ],
+    "graph": {
+      "startId": "vision",
+      "edges": [
+        { "from": "vision", "to": "key-features", "description": "introduces core product capabilities" },
+        { "from": "key-features", "to": "neural-sync", "description": "explores AI technology foundation" },
+        { "from": "neural-sync", "to": "user-experience", "description": "demonstrates user interface and workflow" },
+        { "from": "user-experience", "to": "market-opportunity", "description": "connects features to market needs" },
+        { "from": "market-opportunity", "to": "launch-strategy", "description": "outlines market entry approach" },
+        { "from": "launch-strategy", "to": "competitive-advantage", "description": "highlights differentiation factors" },
+        { "from": "competitive-advantage", "to": "testimonials", "description": "validates with user feedback" },
+        { "from": "testimonials", "to": "glossary", "description": "defines product terminology" },
+        { "from": "vision", "to": "market-opportunity", "description": "shortcut for business-focused viewers", "label": "Skip to market" },
+        { "from": "key-features", "to": "competitive-advantage", "description": "bypasses technical implementation details", "label": "Skip technical details" },
+        { "from": "market-opportunity", "to": "testimonials", "description": "jumps directly to social proof", "label": "Skip strategy" }
+      ],
+      "defaultPath": [
+        "vision",
+        "key-features",
+        "neural-sync",
+        "user-experience",
+        "market-opportunity",
+        "launch-strategy",
+        "competitive-advantage",
+        "testimonials",
+        "glossary"
+      ]
+    }
+  },
+  "hero": {
+    "title": "Introducing Aurora",
+    "subtitle": "The next generation platform that redefines how teams collaborate and innovate in the digital age.",
+    "callToAction": {
+      "text": "Discover Aurora",
+      "link": "#vision"
+    }
+  },
+  "glossary": [
+    { "term": "Aurora", "definition": "Our flagship product - an AI-powered collaboration platform." },
+    { "term": "NeuralSync", "definition": "Advanced AI technology for real-time collaboration and insights." },
+    { "term": "QuantumFlow", "definition": "Our proprietary workflow optimization engine." },
+    { "term": "CrystalClear", "definition": "AI-powered analytics and reporting dashboard." }
+  ],
+  "sections": [
+    {
+      "id": "vision",
+      "title": "Our Vision",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Aurora represents a fundamental shift in how organizations approach collaboration, innovation, and digital transformation. Built on cutting-edge AI technology, Aurora seamlessly integrates with existing workflows while introducing revolutionary new capabilities."
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Innovation distinguishes between a leader and a follower.",
+            "cite": "Steve Jobs"
+          }
+        }
+      ]
+    },
+    {
+      "id": "key-features",
+      "title": "Key Features",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Aurora's core capabilities are designed around three fundamental principles: intelligence, collaboration, and scalability."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Aurora Platform] --> B[NeuralSync AI]\n    A --> C[QuantumFlow Engine]\n    A --> D[CrystalClear Analytics]\n    \n    B --> E[Smart Collaboration]\n    B --> F[Auto Insights]\n    C --> G[Workflow Optimization]\n    C --> H[Resource Management]\n    D --> I[Real-time Dashboards]\n    D --> J[Performance Tracking]\n    \n    style A fill:#8b5cf6,color:#fff\n    style B fill:#a78bfa\n    style C fill:#c4b5fd\n    style D fill:#ddd6fe"
+        }
+      ],
+      "subsections": [
+        {
+          "id": "neural-sync",
+          "title": "NeuralSync Technology",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "NeuralSync uses advanced machine learning to understand team dynamics, predict collaboration needs, and optimize communication patterns in real-time."
+            },
+            {
+              "type": "image",
+              "value": {
+                "src": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=400&fit=crop",
+                "alt": "AI neural network visualization",
+                "caption": "NeuralSync processing team collaboration patterns"
+              }
+            }
+          ]
+        },
+        {
+          "id": "user-experience",
+          "title": "User Experience Highlights",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The Aurora interface is designed for intuitive use while providing powerful capabilities under the surface."
+            },
+            {
+              "type": "kpi-grid",
+              "value": [
+                { "label": "Time to Proficiency", "value": "< 2 hours" },
+                { "label": "User Satisfaction", "value": "96%" },
+                { "label": "Task Completion", "value": "+340%" },
+                { "label": "Error Reduction", "value": "78%" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "market-opportunity",
+      "title": "Market Opportunity",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "The collaboration software market is valued at $50B annually, with AI-enhanced solutions representing the fastest-growing segment."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Market Segmentation\n    \"Traditional Tools\" : 65\n    \"AI-Enhanced\" : 25\n    \"Emerging Solutions\" : 10"
+        }
+      ]
+    },
+    {
+      "id": "launch-strategy",
+      "title": "Launch Strategy",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our phased launch approach ensures maximum market penetration and user adoption."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[Phase 1: Beta] --> B[Phase 2: Early Access]\n    B --> C[Phase 3: General Release]\n    C --> D[Phase 4: Enterprise Rollout]\n    \n    A --> E[100 Users]\n    B --> F[1,000 Users]\n    C --> G[10,000 Users]\n    D --> H[Enterprise Clients]\n    \n    style A fill:#fef3c7\n    style B fill:#fde68a\n    style C fill:#fcd34d\n    style D fill:#f59e0b"
+        }
+      ]
+    },
+    {
+      "id": "competitive-advantage",
+      "title": "Competitive Advantages",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Aurora's unique combination of AI capabilities, user experience, and enterprise features sets it apart from existing solutions."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "AI Integration Depth", "value": "98%" },
+            { "label": "User Adoption Rate", "value": "94%" },
+            { "label": "Enterprise Features", "value": "Complete" },
+            { "label": "Security Compliance", "value": "SOC 2 Type II" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "testimonials",
+      "title": "Early User Feedback",
+      "content": [
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Aurora has transformed how our distributed team collaborates. The AI insights are game-changing.",
+            "cite": "Sarah Chen, CTO at TechFlow"
+          }
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Finally, a collaboration tool that understands context and anticipates needs. Brilliant!",
+            "cite": "Marcus Rodriguez, Product Manager"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Product Terminology",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}
+

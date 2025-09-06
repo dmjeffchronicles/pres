@@ -1,0 +1,291 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Narrative Presentation Schema",
+    "description": "🎨 Complete presentation system with 6-color theme palette. Easily customize colors for buttons, diagrams, text, and backgrounds. Auto-adapts to light/dark themes.",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The overall title of the presentation, used for the browser tab."
+      },
+      "theme": {
+        "type": "object",
+        "description": "🎨 Complete theme system with 6 core colors. Automatically adapts all UI elements including Mermaid diagrams, buttons, hero section, and navigation.",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["light", "dark", "auto"],
+            "description": "Theme mode. 'auto' detects system preference. Toggle with T key or theme button.",
+            "default": "auto",
+            "examples": ["auto", "light", "dark"]
+          },
+          "colors": {
+            "type": "object",
+            "description": "📋 6-color palette - the only colors you need to customize your entire presentation!",
+            "properties": {
+              "primary": {
+                "type": "string",
+                "format": "color",
+                "description": "🔵 Main brand color - buttons, links, accents, Mermaid diagram elements",
+                "example": "#2563eb",
+                "default": "#2563eb"
+              },
+              "secondary": {
+                "type": "string",
+                "format": "color",
+                "description": "⚪ Secondary color - borders, muted elements, supporting UI",
+                "example": "#6b7280",
+                "default": "#6b7280"
+              },
+              "background": {
+                "type": "string",
+                "format": "color",
+                "description": "🏠 Main page background - hero section, body background",
+                "example": "#ffffff",
+                "default": "#ffffff"
+              },
+              "surface": {
+                "type": "string",
+                "format": "color",
+                "description": "📦 Card/surface background - Mermaid containers, highlight cards",
+                "example": "#f8f9fa",
+                "default": "#f8f9fa"
+              },
+              "text": {
+                "type": "string",
+                "format": "color",
+                "description": "📝 Primary text color - headings, main content",
+                "example": "#1a1a1a",
+                "default": "#1a1a1a"
+              },
+              "text-secondary": {
+                "type": "string",
+                "format": "color",
+                "description": "📝 Secondary text color - descriptions, muted text",
+                "example": "#6c757d",
+                "default": "#6c757d"
+              }
+            },
+            "additionalProperties": false,
+            "required": ["primary", "secondary", "background", "surface", "text", "text-secondary"]
+          }
+        },
+        "examples": [
+          {
+            "description": "✨ Default Light Theme",
+            "mode": "light",
+            "colors": {
+              "primary": "#2563eb",
+              "secondary": "#6b7280",
+              "background": "#ffffff",
+              "surface": "#f8f9fa",
+              "text": "#1a1a1a",
+              "text-secondary": "#6c757d"
+            }
+          },
+          {
+            "description": "🌙 Professional Dark Theme",
+            "mode": "dark",
+            "colors": {
+              "primary": "#60a5fa",
+              "secondary": "#9ca3af",
+              "background": "#1a1a1a",
+              "surface": "#2a2a2a",
+              "text": "#ffffff",
+              "text-secondary": "#9ca3af"
+            }
+          },
+          {
+            "description": "🌈 Custom Brand Colors",
+            "mode": "auto",
+            "colors": {
+              "primary": "#e11d48",
+              "secondary": "#64748b",
+              "background": "#fefefe",
+              "surface": "#f1f5f9",
+              "text": "#0f172a",
+              "text-secondary": "#64748b"
+            }
+          }
+        ]
+      },
+        "navigation": {
+          "type": "object",
+          "description": "Navigation configuration for custom section order",
+          "properties": {
+            "order": {
+              "type": "array",
+              "description": "Array of section/subsection IDs defining custom navigation order",
+              "items": {
+                "type": "string",
+                "description": "Section or subsection ID that must exist in the presentation"
+              }
+            }
+          },
+          "additionalProperties": false
+      },
+      "hero": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "subtitle": { "type": "string" },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": { "type": "string" },
+                "value": { "type": "string" },
+                "label": { "type": "string" }
+              },
+              "required": ["metric", "value", "label"]
+            }
+          },
+          "callToAction": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "link": { "type": "string", "description": "An anchor link, e.g., '#section-id'" }
+            },
+            "required": ["text", "link"]
+          },
+          "callToActions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string" },
+                "link": { "type": "string", "description": "An anchor link, e.g., '#section-id'" },
+                "primary": { "type": "boolean", "description": "Whether this is the primary action button" }
+              },
+              "required": ["text", "link"]
+            }
+          }
+        },
+        "required": ["title", "subtitle"]
+      },
+      "glossary": {
+        "type": "array",
+        "description": "A list of terms and definitions for automatic highlighting and tooltips.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "term": { "type": "string" },
+            "definition": { "type": "string" }
+          },
+          "required": ["term", "definition"]
+        }
+      },
+      "sections": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/section" }
+      }
+    },
+    "required": ["title", "sections"],
+    "definitions": {
+      "contentBlock": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["paragraph", "image", "mermaid", "kpi-grid", "blockquote", "glossary"]
+          }
+        },
+        "required": ["type"],
+        "oneOf": [
+          {
+            "properties": {
+              "type": { "const": "paragraph" },
+              "value": { "type": "string" }
+            }, "required": ["value"]
+          },
+          {
+            "properties": {
+              "type": { "const": "image" },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "src": { "type": "string", "format": "uri" },
+                  "alt": { "type": "string" },
+                  "caption": { "type": "string" }
+                }, "required": ["src", "alt"]
+              }
+            }, "required": ["value"]
+          },
+          {
+            "properties": {
+              "type": { "const": "mermaid" },
+              "value": {
+                "type": "string",
+                "description": "Valid Mermaid.js syntax. Diagrams automatically adapt to the current theme (light/dark/auto). Lines, nodes, and text colors are themed to match the presentation colors. Supported diagram types: flowchart, sequence, gantt, pie, and more."
+              }
+            }, "required": ["value"]
+          },
+          {
+            "properties": {
+              "type": { "const": "kpi-grid" },
+              "value": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": { "type": "string" },
+                    "value": { "type": "string" }
+                  }, "required": ["label", "value"]
+                }
+              }
+            }, "required": ["value"]
+          },
+          {
+            "properties": {
+              "type": { "const": "blockquote" },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "text": { "type": "string" },
+                  "cite": { "type": "string" }
+                }, "required": ["text"]
+              }
+            }, "required": ["value"]
+          },
+          {
+              "properties": {
+                  "type": { "const": "glossary" }
+              },
+              "description": "A placeholder block that will be automatically populated with the glossary."
+          }
+        ]
+      },
+      "subsection": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Unique ID for anchor linking." },
+          "title": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/contentBlock" }
+          }
+        },
+        "required": ["id", "title", "content"]
+      },
+      "section": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Unique ID for anchor linking." },
+          "title": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/contentBlock" }
+          },
+          "subsections": {
+              "type": "array",
+              "description": "An optional array of subsections for creating a hierarchy.",
+              "items": { "$ref": "#/definitions/subsection" }
+          }
+        },
+        "required": ["id", "title", "content"]
+      }
+    }
+  }
+  
+  

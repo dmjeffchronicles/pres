@@ -1,0 +1,186 @@
+{
+  "title": "Rapport Financier Trimestriel - Desjardins",
+  "theme": {
+    "mode": "auto",
+    "colors": {
+      "primary": "#00853F",
+      "secondary": "#64748b",
+      "background": "#f8fafc",
+      "surface": "#ffffff",
+      "text": "#1e293b",
+      "text-secondary": "#64748b"
+    }
+  },
+  "navigation": {
+    "mode": "graph",
+    "order": [
+      "introduction",
+      "indicateurs-cles",
+      "initiatives-strategiques",
+      "expansion-numerique",
+      "lancement-initiative",
+      "conclusions-cles",
+      "glossaire"
+    ],
+    "graph": {
+      "startId": "introduction",
+      "edges": [
+        { "from": "introduction", "to": "indicateurs-cles", "description": "presents key metrics after context" },
+        { "from": "indicateurs-cles", "to": "initiatives-strategiques", "description": "explores initiatives driving the metrics" },
+        { "from": "initiatives-strategiques", "to": "expansion-numerique", "description": "dives into the main strategic initiative" },
+        { "from": "initiatives-strategiques", "to": "lancement-initiative", "description": "alternative path to initiative launch details" },
+        { "from": "expansion-numerique", "to": "conclusions-cles", "description": "connects initiative outcomes to conclusions" },
+        { "from": "lancement-initiative", "to": "conclusions-cles", "description": "connects initiative launch to conclusions" },
+        { "from": "conclusions-cles", "to": "glossaire", "description": "provides terminology reference" },
+        { "from": "introduction", "to": "initiatives-strategiques", "description": "shortcut for experienced viewers", "label": "Skip to initiatives" }
+      ],
+      "defaultPath": [
+        "introduction",
+        "indicateurs-cles",
+        "initiatives-strategiques",
+        "expansion-numerique",
+        "lancement-initiative",
+        "conclusions-cles",
+        "glossaire"
+      ]
+    }
+  },
+  "hero": {
+    "title": "Rapport Financier T3 2024",
+    "subtitle": "Analyse des indicateurs clés de performance, initiatives stratégiques et perspectives d'avenir.",
+    "highlights": [
+      {
+        "metric": "Croissance",
+        "value": "+127%",
+        "label": "vs T3 2023"
+      },
+      {
+        "metric": "Membres",
+        "value": "1.2M",
+        "label": "Nouveaux clients"
+      },
+      {
+        "metric": "Satisfaction",
+        "value": "94%",
+        "label": "Score client"
+      }
+    ],
+    "callToActions": [
+      {
+        "text": "📊 Explorer les Résultats Clés",
+        "link": "#indicateurs-cles",
+        "primary": true
+      },
+      {
+        "text": "🎯 Voir les Initiatives Stratégiques",
+        "link": "#initiatives-strategiques",
+        "primary": false
+      }
+    ]
+  },
+  "glossary": [
+    { "term": "IPC", "definition": "Indicateur de Performance Clé: Valeur mesurable qui démontre l'efficacité avec laquelle une organisation atteint ses objectifs d'affaires." },
+    { "term": "RSI", "definition": "Retour sur Investissement: Mesure de performance utilisée pour évaluer l'efficacité ou la rentabilité d'un investissement." },
+    { "term": "Attrition", "definition": "Le pourcentage de clients qui cessent d'utiliser les produits ou services d'une entreprise pendant une période donnée." },
+    { "term": "MRR", "definition": "Revenus Récurrents Mensuels: Revenus prévisibles générés chaque mois par une entreprise." },
+    { "term": "CAC", "definition": "Coût d'Acquisition Client: Coût total pour acquérir un nouveau client." }
+  ],
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Ce rapport trimestriel présente un aperçu complet des performances de Desjardins au cours du troisième trimestre 2024. Nous analyserons les métriques d'engagement client, les résultats financiers, et l'avancement de nos initiatives stratégiques clés. Notre objectif est de fournir une perspective claire et basée sur les données de notre position actuelle et de notre trajectoire future."
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Les données sont le nouveau pétrole. Elles sont précieuses, mais si elles ne sont pas raffinées, elles ne peuvent pas vraiment être utilisées.",
+            "cite": "Clive Humby"
+          }
+        }
+      ]
+    },
+    {
+      "id": "indicateurs-cles",
+      "title": "Indicateurs de Performance Clés",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Nos métriques principales montrent une croissance solide dans tous les secteurs, avec l'acquisition de nouveaux membres dépassant les objectifs de 15%."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Nouveaux Membres", "value": "1.2M" },
+            { "label": "Taux d'Engagement", "value": "68%" },
+            { "label": "Croissance des Revenus", "value": "+21%" },
+            { "label": "Attrition Clients", "value": "2.1%" },
+            { "label": "Satisfaction Membre", "value": "94%" },
+            { "label": "Volume des Transactions", "value": "+18%" }
+          ]
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Répartition des Revenus T3\n    \"Services Financiers\" : 45\n    \"Assurance\" : 28\n    \"Services Numériques\" : 18\n    \"Autres\" : 9"
+        }
+      ]
+    },
+    {
+      "id": "initiatives-strategiques",
+      "title": "Initiatives Stratégiques",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Nos trois initiatives clés du T3 se concentraient sur l'expansion numérique, l'amélioration des services membres et l'efficacité opérationnelle. Le diagramme ci-dessous illustre le flux de travail de notre stratégie d'expansion numérique."
+        }
+      ],
+      "subsections": [
+        {
+          "id": "expansion-numerique",
+          "title": "Expansion Numérique",
+          "content": [
+            {
+              "type": "mermaid",
+              "value": "graph TD\n    A[Phase 1: Recherche] --> B{Viabilité Marché?}\n    B -- Oui --> C[Phase 2: Localisation]\n    B -- Non --> D[Réévaluation]\n    C --> E[Phase 3: Lancement Campagne]\n    E --> F[Surveillance & Optimisation]"
+            }
+          ]
+        },
+        {
+          "id": "lancement-initiative",
+          "title": "Lancement d'Initiative",
+          "content": [
+            {
+              "type": "image",
+              "value": {
+                "src": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+                "alt": "Équipe lors du lancement de la nouvelle initiative numérique",
+                "caption": "L'équipe célébrant le lancement réussi de l'expansion numérique."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conclusions-cles",
+      "title": "Conclusions Clés et Prochaines Étapes",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Sur la base des données du T3 et des tendances positives des IPC, nous recommandons d'allouer des ressources supplémentaires à l'initiative d'amélioration des services numériques, qui a démontré le RSI le plus élevé. Notre faible taux d'attrition des membres témoigne de la qualité de nos services. Nous présenterons un plan détaillé lors de la prochaine séance stratégique."
+        }
+      ]
+    },
+    {
+      "id": "glossaire",
+      "title": "Glossaire",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}
+
