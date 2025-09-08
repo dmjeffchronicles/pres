@@ -1,0 +1,121 @@
+{
+  "$id": "urn:narrative-presentation-schema-small:v1",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Narrative Presentation Schema (Small)",
+  "description": "Minimal schema to author a valid presentation. Omits advanced theming and examples.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/section" }
+    }
+  },
+  "required": ["title", "sections"],
+  "definitions": {
+    "contentBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["paragraph", "image", "mermaid", "kpi-grid", "blockquote", "glossary"]
+        }
+      },
+      "required": ["type"],
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "paragraph" },
+            "value": { "type": "string" }
+          },
+          "required": ["value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "image" },
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "src": { "type": "string", "format": "uri" },
+                "alt": { "type": "string" },
+                "caption": { "type": "string" }
+              },
+              "required": ["src", "alt"]
+            }
+          },
+          "required": ["value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "mermaid" },
+            "value": { "type": "string" }
+          },
+          "required": ["value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "kpi-grid" },
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": { "type": "string" }
+                },
+                "required": ["label", "value"]
+              }
+            }
+          },
+          "required": ["value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "blockquote" },
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "text": { "type": "string" },
+                "cite": { "type": "string" }
+              },
+              "required": ["text"]
+            }
+          },
+          "required": ["value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "glossary" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/contentBlock" }
+        }
+      },
+      "required": ["id", "title", "content"]
+    }
+  }
+}
+
+

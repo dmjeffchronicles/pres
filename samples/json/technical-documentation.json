@@ -1,0 +1,286 @@
+{
+  "title": "Technical Documentation: API Reference & Developer Guide",
+  "theme": {
+    "mode": "light",
+    "colors": {
+      "light": {
+        "primary": "#1e40af",
+        "secondary": "#374151",
+        "background": "#f8fafc",
+        "surface": "#ffffff",
+        "text": "#111827",
+        "text-secondary": "#4b5563"
+      },
+      "dark": {
+        "primary": "#3b82f6",
+        "secondary": "#6b7280",
+        "background": "#0f172a",
+        "surface": "#1e293b",
+        "text": "#f1f5f9",
+        "text-secondary": "#cbd5e1"
+      }
+    }
+  },
+  "navigation": {
+    "order": [
+      "getting-started",
+      "authentication",
+      "api-reference",
+      "code-examples",
+      "architecture",
+      "best-practices",
+      "troubleshooting",
+      "glossary"
+    ]
+  },
+  "hero": {
+    "title": "Technical Documentation",
+    "subtitle": "Complete API reference and developer guide for seamless integration and development",
+    "highlights": [
+      {
+        "metric": "API Endpoints",
+        "value": "150+",
+        "label": "Comprehensive coverage"
+      },
+      {
+        "metric": "SDK Support",
+        "value": "8 languages",
+        "label": "Multi-platform"
+      },
+      {
+        "metric": "Uptime SLA",
+        "value": "99.99%",
+        "label": "Enterprise reliability"
+      }
+    ],
+    "callToActions": [
+      {
+        "text": "🚀 Get Started",
+        "link": "#getting-started",
+        "primary": true
+      },
+      {
+        "text": "📚 API Reference",
+        "link": "#api-reference",
+        "primary": false
+      },
+      {
+        "text": "💻 Code Examples",
+        "link": "#code-examples",
+        "primary": false
+      }
+    ]
+  },
+  "glossary": [
+    { "term": "RESTful API", "definition": "An application programming interface that conforms to the constraints of REST architectural style." },
+    { "term": "OAuth 2.0", "definition": "An authorization framework that enables applications to obtain limited access to user accounts." },
+    { "term": "JWT", "definition": "JSON Web Token: A compact, URL-safe means of representing claims between two parties." },
+    { "term": "Webhook", "definition": "A method of augmenting or altering the behavior of a web page with custom callbacks." },
+    { "term": "Rate Limiting", "definition": "A technique to control the rate of requests sent or received by a network interface controller." },
+    { "term": "SDK", "definition": "Software Development Kit: A collection of software development tools in one installable package." }
+  ],
+  "sections": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Welcome to our comprehensive API documentation. This guide will help you get up and running with our platform in minutes, whether you're building a simple integration or a complex enterprise application."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Setup Time", "value": "< 5 minutes" },
+            { "label": "Free Tier", "value": "10,000 requests" },
+            { "label": "Support", "value": "24/7 available" },
+            { "label": "Languages", "value": "8 SDKs" },
+            { "label": "Regions", "value": "12 global" },
+            { "label": "Security", "value": "Bank-grade" }
+          ]
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Choose Your Path] --> B[Quick Start]\n    A --> C[SDK Installation]\n    A --> D[Manual Integration]\n    \n    B --> E[Get API Key]\n    B --> F[Make First Call]\n    B --> G[Handle Response]\n    \n    C --> H[Download SDK]\n    C --> I[Install Dependencies]\n    C --> J[Initialize Client]\n    \n    D --> K[Review Authentication]\n    D --> L[Study API Reference]\n    D --> M[Build Integration]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#3b82f6,color:#fff\n    style C fill:#60a5fa,color:#000\n    style D fill:#93c5fd,color:#000"
+        }
+      ]
+    },
+    {
+      "id": "authentication",
+      "title": "Authentication & Security",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our authentication system uses industry-standard OAuth 2.0 with JWT tokens for secure, scalable access control. We support multiple authentication flows to meet different integration requirements."
+        },
+        {
+          "type": "mermaid",
+          "value": "sequenceDiagram\n    participant Client\n    participant API Gateway\n    participant Auth Service\n    participant Resource Server\n    \n    Client->>API Gateway: POST /oauth/token\n    API Gateway->>Auth Service: Validate credentials\n    Auth Service-->>API Gateway: JWT Access Token\n    API Gateway-->>Client: Access Token + Refresh Token\n    \n    Client->>API Gateway: GET /api/resource (Bearer Token)\n    API Gateway->>Resource Server: Validate JWT\n    Resource Server-->>API Gateway: Resource Data\n    API Gateway-->>Client: JSON Response"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Authentication Methods] --> B[OAuth 2.0]\n    A --> C[API Keys]\n    A --> D[JWT Tokens]\n    A --> E[Client Certificates]\n    \n    B --> F[Authorization Code]\n    B --> G[Client Credentials]\n    B --> H[Implicit Grant]\n    B --> I[Password Grant]\n    \n    C --> J[HMAC Signing]\n    C --> K[Query Parameters]\n    C --> L[Header Authentication]\n    \n    D --> M[Bearer Tokens]\n    D --> N[Token Refresh]\n    D --> O[Token Revocation]\n    \n    E --> P[X.509 Certificates]\n    E --> Q[Mutual TLS]\n    E --> R[Certificate Pinning]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#3b82f6,color:#fff\n    style C fill:#60a5fa,color:#000\n    style D fill:#93c5fd,color:#000\n    style E fill:#dbeafe,color:#000"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Token Lifetime", "value": "1 hour" },
+            { "label": "Refresh Window", "value": "30 days" },
+            { "label": "Encryption", "value": "AES-256" },
+            { "label": "Rate Limits", "value": "10,000/hour" },
+            { "label": "Failed Attempts", "value": "5 max" },
+            { "label": "Lockout Period", "value": "15 minutes" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "api-reference",
+      "title": "API Reference",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our RESTful API provides comprehensive access to all platform features with consistent patterns, detailed error handling, and extensive documentation."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[API Categories] --> B[Core Resources]\n    A --> C[Analytics]\n    A --> D[Administration]\n    A --> E[Integrations]\n    \n    B --> F(/users)\n    B --> G(/organizations)\n    B --> H(/projects)\n    B --> I(/teams)\n    \n    C --> J(/analytics/events)\n    C --> K(/analytics/reports)\n    C --> L(/analytics/dashboards)\n    \n    D --> M(/admin/users)\n    D --> N(/admin/organizations)\n    D --> O(/admin/system)\n    \n    E --> P(/integrations/webhooks)\n    E --> Q(/integrations/oauth)\n    E --> R(/integrations/sso)\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#3b82f6,color:#fff\n    style C fill:#60a5fa,color:#000\n    style D fill:#93c5fd,color:#000\n    style E fill:#dbeafe,color:#000"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[HTTP Methods] --> B[GET]\n    A --> C[POST]\n    A --> D[PUT]\n    A --> E[PATCH]\n    A --> F[DELETE]\n    \n    B --> G[List Resources]\n    B --> H[Get Single Resource]\n    B --> I[Search/Filter]\n    \n    C --> J[Create Resource]\n    C --> K[Bulk Operations]\n    C --> L[Import Data]\n    \n    D --> M[Full Update]\n    D --> N[Replace Resource]\n    \n    E --> O[Partial Update]\n    E --> P[Modify Fields]\n    \n    F --> Q[Delete Resource]\n    F --> R[Bulk Delete]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#10b981,color:#fff\n    style C fill:#059669,color:#fff\n    style D fill:#0d9488,color:#fff\n    style E fill:#0f766e,color:#fff\n    style F fill:#dc2626,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Response Time", "value": "< 200ms" },
+            { "label": "Success Rate", "value": "99.9%" },
+            { "label": "Error Rate", "value": "< 0.1%" },
+            { "label": "Pagination", "value": "Cursor-based" },
+            { "label": "Filtering", "value": "Advanced" },
+            { "label": "Versioning", "value": "Header-based" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "code-examples",
+      "title": "Code Examples & SDKs",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "We provide official SDKs for all major programming languages with comprehensive code examples, documentation, and community support."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title SDK Usage by Language\n    \"JavaScript/TypeScript\" : 35\n    \"Python\" : 28\n    \"Java\" : 15\n    \"C#\" : 12\n    \"Go\" : 6\n    \"PHP\" : 4"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[SDK Features] --> B[Authentication]\n    A --> C[HTTP Client]\n    A --> D[Error Handling]\n    A --> E[Type Safety]\n    A --> F[Testing Utilities]\n    \n    B --> G[OAuth Flows]\n    B --> H[Token Management]\n    B --> I[Refresh Logic]\n    \n    C --> J[Request/Response]\n    C --> K[Retry Logic]\n    C --> L[Rate Limiting]\n    \n    D --> M[Structured Errors]\n    D --> N[Validation]\n    D --> O[Logging]\n    \n    E --> P[TypeScript Types]\n    E --> Q[Schema Validation]\n    E --> R[IntelliSense]\n    \n    F --> S[Mock Clients]\n    F --> T[Test Helpers]\n    F --> U[CI/CD Integration]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#3b82f6,color:#fff\n    style C fill:#60a5fa,color:#000\n    style D fill:#93c5fd,color:#000\n    style E fill:#dbeafe,color:#000\n    style F fill:#f1f5f9,color:#000"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "SDK Downloads", "value": "2.5M/month" },
+            { "label": "Community PRs", "value": "450+" },
+            { "label": "Issues Resolved", "value": "98%" },
+            { "label": "Documentation", "value": "100% coverage" },
+            { "label": "Test Coverage", "value": "95%+" },
+            { "label": "Security Audits", "value": "Quarterly" }
+          ]
+        },
+        {
+          "type": "image",
+          "value": {
+            "src": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop",
+            "alt": "Developer working with code and API documentation",
+            "caption": "Our comprehensive SDK ecosystem supports developers across all major platforms and languages."
+          }
+        }
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "System Architecture",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our distributed architecture ensures high availability, scalability, and performance across global regions with comprehensive monitoring and automated failover capabilities."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TB\n    subgraph \"Edge Network\"\n        A[CDN]\n        B[Load Balancers]\n        C[WAF]\n    end\n    \n    subgraph \"API Gateway Layer\"\n        D[Rate Limiting]\n        E[Authentication]\n        F[Request Routing]\n    end\n    \n    subgraph \"Application Layer\"\n        G[Microservices]\n        H[Serverless Functions]\n        I[Message Queues]\n    end\n    \n    subgraph \"Data Layer\"\n        J[(Primary Database)]\n        K[(Cache Layer)]\n        L[(Search Engine)]\n        M[(Object Storage)]\n    end\n    \n    subgraph \"Infrastructure\"\n        N[Kubernetes]\n        O[Monitoring]\n        P[Logging]\n        Q[Security]\n    end\n    \n    A --> B\n    B --> C\n    C --> D\n    D --> E\n    E --> F\n    F --> G\n    F --> H\n    G --> I\n    H --> I\n    I --> J\n    I --> K\n    I --> L\n    I --> M\n    \n    G --> N\n    H --> N\n    N --> O\n    N --> P\n    N --> Q\n    \n    style A fill:#1e40af,color:#fff\n    style D fill:#3b82f6,color:#fff\n    style G fill:#60a5fa,color:#000\n    style N fill:#93c5fd,color:#000"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Scalability Features] --> B[Auto-scaling]\n    A --> C[Load Balancing]\n    A --> D[Database Sharding]\n    A --> E[CDN Distribution]\n    A --> F[Circuit Breakers]\n    \n    B --> G[Horizontal Scaling]\n    B --> H[Vertical Scaling]\n    B --> I[Event-driven]\n    \n    C --> J[Global Distribution]\n    C --> K[Health Checks]\n    C --> L[Failover]\n    \n    D --> M[Read Replicas]\n    D --> N[Write Sharding]\n    D --> O[Data Partitioning]\n    \n    E --> P[Edge Locations]\n    E --> Q[Cache Invalidation]\n    E --> R[Compression]\n    \n    F --> S[Graceful Degradation]\n    F --> T[Retry Logic]\n    F --> U[Bulkhead Pattern]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#3b82f6,color:#fff\n    style C fill:#60a5fa,color:#000\n    style D fill:#93c5fd,color:#000\n    style E fill:#dbeafe,color:#000\n    style F fill:#f1f5f9,color:#000"
+        }
+      ]
+    },
+    {
+      "id": "best-practices",
+      "title": "Best Practices & Guidelines",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Following these best practices ensures optimal performance, security, and maintainability of your integrations with our platform."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Best Practices] --> B[Performance]\n    A --> C[Security]\n    A --> D[Reliability]\n    A --> E[Maintainability]\n    \n    B --> F[Connection Pooling]\n    B --> G[Batching Requests]\n    B --> H[Caching Strategy]\n    B --> I[Async Processing]\n    \n    C --> J[Input Validation]\n    C --> K[Secure Storage]\n    C --> L[Rate Limiting]\n    C --> M[Error Handling]\n    \n    D --> N[Retry Logic]\n    D --> O[Circuit Breakers]\n    D --> P[Monitoring]\n    D --> Q[Logging]\n    \n    E --> R[Code Organization]\n    E --> S[Documentation]\n    E --> T[Version Control]\n    E --> U[Testing Strategy]\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#10b981,color:#fff\n    style C fill:#059669,color:#fff\n    style D fill:#dc2626,color:#fff\n    style E fill:#7c3aed,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Performance Boost", "value": "+300%" },
+            { "label": "Error Reduction", "value": "80%" },
+            { "label": "Maintenance Cost", "value": "-40%" },
+            { "label": "Security Score", "value": "A+" },
+            { "label": "Reliability", "value": "99.99%" },
+            { "label": "Developer Satisfaction", "value": "96%" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting & Support",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our comprehensive troubleshooting guide and 24/7 support ensure you can resolve issues quickly and maintain smooth operations."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Troubleshooting Flow] --> B{Error Type?}\n    B --> C[Authentication]\n    B --> D[Rate Limiting]\n    B --> E[Network Issues]\n    B --> F[Data Validation]\n    B --> G[Server Errors]\n    \n    C --> H[Check API Key]\n    C --> I[Verify Token]\n    C --> J[Review Scopes]\n    \n    D --> K[Check Limits]\n    D --> L[Implement Backoff]\n    D --> M[Request Quota]\n    \n    E --> N[Test Connectivity]\n    E --> O[Check DNS]\n    E --> P[Review Proxies]\n    \n    F --> Q[Validate Schema]\n    F --> R[Check Formats]\n    F --> S[Review Constraints]\n    \n    G --> T[Check Status Page]\n    G --> U[Review Headers]\n    G --> V[Contact Support]\n    \n    H --> W[Resolution Steps]\n    I --> W\n    J --> W\n    K --> X[Resolution Steps]\n    L --> X\n    M --> X\n    N --> Y[Resolution Steps]\n    O --> Y\n    P --> Y\n    Q --> Z[Resolution Steps]\n    R --> Z\n    S --> Z\n    T --> AA[Resolution Steps]\n    U --> AA\n    V --> AA\n    \n    style A fill:#1e40af,color:#fff\n    style B fill:#dc2626,color:#fff\n    style W fill:#16a34a,color:#fff\n    style X fill:#16a34a,color:#fff\n    style Y fill:#16a34a,color:#fff\n    style Z fill:#16a34a,color:#fff\n    style AA fill:#16a34a,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Avg Resolution Time", "value": "4.2 hours" },
+            { "label": "Self-Service Rate", "value": "68%" },
+            { "label": "Support Satisfaction", "value": "4.8/5" },
+            { "label": "Documentation Coverage", "value": "95%" },
+            { "label": "Community Answers", "value": "42%" },
+            { "label": "Escalation Rate", "value": "3%" }
+          ]
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "The best APIs are not just powerful, they're predictable and well-documented. Our commitment to developer experience means you can focus on building amazing products, not fighting with integrations.",
+            "cite": "Dr. Sarah Chen, Head of Developer Relations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Technical Glossary",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}

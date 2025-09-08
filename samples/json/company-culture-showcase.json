@@ -1,0 +1,306 @@
+{
+  "title": "Company Culture Showcase: People First, Always",
+  "theme": {
+    "mode": "light",
+    "colors": {
+      "light": {
+        "primary": "#f59e0b",
+        "secondary": "#d97706",
+        "background": "#fefce8",
+        "surface": "#ffffff",
+        "text": "#92400e",
+        "text-secondary": "#a16207"
+      },
+      "dark": {
+        "primary": "#fbbf24",
+        "secondary": "#f59e0b",
+        "background": "#451a03",
+        "surface": "#78350f",
+        "text": "#fef3c7",
+        "text-secondary": "#fde68a"
+      }
+    }
+  },
+  "navigation": {
+    "order": [
+      "our-story",
+      "core-values",
+      "diversity-inclusion",
+      "employee-spotlight",
+      "work-life-harmony",
+      "growth-opportunities",
+      "community-impact",
+      "future-culture",
+      "glossary"
+    ]
+  },
+  "hero": {
+    "title": "People First, Always",
+    "subtitle": "Celebrating the heart and soul of our organization - the incredible people who make it all possible",
+    "highlights": [
+      {
+        "metric": "Employee Satisfaction",
+        "value": "96%",
+        "label": "Globally recognized"
+      },
+      {
+        "metric": "Diversity Score",
+        "value": "98%",
+        "label": "Inclusive excellence"
+      },
+      {
+        "metric": "Retention Rate",
+        "value": "94%",
+        "label": "People choose to stay"
+      }
+    ],
+    "callToActions": [
+      {
+        "text": "👥 Meet Our People",
+        "link": "#employee-spotlight",
+        "primary": true
+      },
+      {
+        "text": "🌟 Our Values",
+        "link": "#core-values",
+        "primary": false
+      },
+      {
+        "text": "🤝 Join Our Team",
+        "link": "#growth-opportunities",
+        "primary": false
+      }
+    ]
+  },
+  "glossary": [
+    { "term": "Psychological Safety", "definition": "A workplace environment where employees feel safe to take risks, voice opinions, and admit mistakes without fear of negative consequences." },
+    { "term": "Servant Leadership", "definition": "A leadership philosophy that prioritizes the growth, well-being, and success of team members above all else." },
+    { "term": "Inclusive Culture", "definition": "An organizational environment where all employees feel valued, respected, and empowered to contribute their unique perspectives." },
+    { "term": "Work-Life Integration", "definition": "The blending of professional and personal life in a way that supports both productivity and personal fulfillment." },
+    { "term": "Growth Mindset", "definition": "The belief that abilities and intelligence can be developed through dedication, effort, and learning from experiences." }
+  ],
+  "sections": [
+    {
+      "id": "our-story",
+      "title": "Our Story: From Startup to Global Family",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "What started as a small team of passionate innovators in a garage has grown into a global family of over 2,500 employees across 45 countries. Our journey isn't just about business success - it's about building something meaningful that brings out the best in everyone."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Years of Growth", "value": "12+" },
+            { "label": "Countries", "value": "45" },
+            { "label": "Team Members", "value": "2,500+" },
+            { "label": "Offices", "value": "18" },
+            { "label": "Languages Spoken", "value": "32" },
+            { "label": "Time Zones", "value": "24/7" }
+          ]
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Culture isn't just one aspect of the game - it is the game. In the end, an organization is nothing more than the collective capacity of its people to create value.",
+            "cite": "Lou Gerstner, Former CEO of IBM"
+          }
+        }
+      ]
+    },
+    {
+      "id": "core-values",
+      "title": "Our Core Values: The Foundation of Everything",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our values aren't just words on a wall - they're the principles that guide every decision, every interaction, and every innovation. They define who we are and what we stand for as an organization."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Our Values] --> B[People First]\n    A --> C[Innovation with Purpose]\n    A --> D[Inclusive Excellence]\n    A --> E[Customer Obsession]\n    A --> F[Sustainable Impact]\n    \n    B --> G[Empathy & Respect]\n    B --> H[Personal Growth]\n    B --> I[Work-Life Harmony]\n    \n    C --> J[Creative Problem Solving]\n    C --> K[Continuous Learning]\n    C --> L[Bold Experimentation]\n    \n    D --> M[Diversity & Inclusion]\n    D --> N[Equity & Justice]\n    D --> O[Global Mindset]\n    \n    E --> P[Customer Success]\n    E --> Q[User Experience]\n    E --> R[Feedback Culture]\n    \n    F --> S[Environmental Care]\n    F --> T[Community Support]\n    F --> U[Ethical Business]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "image",
+          "value": {
+            "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop",
+            "alt": "Team members collaborating in a bright, inclusive workspace",
+            "caption": "Our values come to life through daily interactions and collaborative work environments."
+          }
+        }
+      ]
+    },
+    {
+      "id": "diversity-inclusion",
+      "title": "Diversity & Inclusion: Our Strength, Our Future",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "We believe that diverse perspectives drive innovation and better solutions. Our commitment to inclusion goes beyond representation - it's about creating an environment where everyone can thrive and contribute their unique talents."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Team Diversity Composition\n    \"Women\" : 52\n    \"Men\" : 48\n    \"Non-Binary\" : 2\n    \"Prefer Not to Say\" : 1"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Diversity Initiatives] --> B[Inclusive Hiring]\n    A --> C[Unconscious Bias Training]\n    A --> D[Employee Resource Groups]\n    A --> E[Mentorship Programs]\n    A --> F[Accessibility Support]\n    \n    B --> G[Skills-Based Hiring]\n    B --> H[Diverse Interview Panels]\n    B --> I[Inclusive Job Descriptions]\n    \n    C --> J[Annual Training]\n    C --> K[Bias Awareness Workshops]\n    C --> L[Inclusive Leadership]\n    \n    D --> M[8 Active Groups]\n    D --> N[Cross-Cultural Events]\n    D --> O[Community Building]\n    \n    E --> P[Mentor Matching]\n    E --> Q[Career Development]\n    E --> R[Sponsorship Programs]\n    \n    F --> S[Universal Design]\n    F --> T[Flexible Work]\n    F --> U[Assistive Technology]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Women in Leadership", "value": "48%" },
+            { "label": "Diverse Hiring Rate", "value": "94%" },
+            { "label": "ERG Participation", "value": "78%" },
+            { "label": "Inclusive Score", "value": "9.6/10" },
+            { "label": "Bias Incident Rate", "value": "0.02%" },
+            { "label": "Global Representation", "value": "85+" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "employee-spotlight",
+      "title": "Employee Spotlight: Celebrating Our People",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Every day, our employees inspire us with their creativity, dedication, and passion. Here are just a few of the remarkable individuals who make our company special."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Employee Spotlight] --> B[Maria Rodriguez - Senior Engineer]\n    A --> C[David Chen - Product Designer]\n    A --> D[Sarah Johnson - Customer Success]\n    A --> E[Ahmed Hassan - Data Scientist]\n    A --> F[Linda Park - Marketing Lead]\n    \n    B --> G['Built our AI infrastructure from scratch']\n    B --> H['Mentors 12 junior engineers']\n    B --> I['Won 3 innovation awards']\n    \n    C --> J['Redesigned our entire user experience']\n    C --> K['Led inclusive design initiatives']\n    C --> L['Published 8 design system papers']\n    \n    D --> M['Achieved 98% customer satisfaction']\n    D --> N['Trained 50+ customer success reps']\n    D --> O['Created customer advocacy program']\n    \n    E --> P['Developed predictive analytics platform']\n    E --> Q['Reduced costs by 40%']\n    E --> R['PhD in Machine Learning']\n    \n    F --> S['Grew brand awareness by 300%']\n    F --> T['Led diversity marketing campaigns']\n    F --> U['Won 5 industry marketing awards']\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "The most important thing I've learned is that you can't please everyone, but you can create an environment where everyone feels heard, valued, and empowered to do their best work.",
+            "cite": "Maria Rodriguez, Senior Engineer"
+          }
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "Design isn't just about making things look pretty - it's about creating experiences that make people feel included, capable, and inspired.",
+            "cite": "David Chen, Product Designer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "work-life-harmony",
+      "title": "Work-Life Harmony: Thriving, Not Just Surviving",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "We believe that the best work happens when people have the freedom and support to live full, balanced lives. Our approach to work-life harmony isn't about work-life balance - it's about integration and flexibility."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Work-Life Harmony] --> B[Flexible Work]\n    A --> C[Mental Health Support]\n    A --> D[Parental Leave]\n    A --> E[Professional Development]\n    A --> F[Wellness Programs]\n    \n    B --> G[Remote-First Policy]\n    B --> H[Flexible Hours]\n    B --> I[Part-Time Options]\n    \n    C --> J[24/7 Counseling]\n    C --> K[Mental Health Days]\n    C --> L[Stress Management]\n    \n    D --> M[16 Weeks Paid Leave]\n    D --> N[Secondary Caregiver Leave]\n    D --> O[Adoption Support]\n    \n    E --> P[Learning Budget]\n    E --> Q[Conference Attendance]\n    E --> R[Professional Certifications]\n    \n    F --> S[Fitness Reimbursements]\n    F --> T[Wellness Challenges]\n    F --> U[Health Screenings]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Flexible Work Adoption", "value": "87%" },
+            { "label": "Parental Leave Usage", "value": "94%" },
+            { "label": "Mental Health Support", "value": "4.8/5" },
+            { "label": "Learning & Development", "value": "$2,500/year" },
+            { "label": "Wellness Participation", "value": "76%" },
+            { "label": "Burnout Rate", "value": "2.1%" }
+          ]
+        },
+        {
+          "type": "image",
+          "value": {
+            "src": "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=400&fit=crop",
+            "alt": "Team members enjoying a wellness activity together",
+            "caption": "Our wellness programs bring people together for activities that support both physical and mental health."
+          }
+        }
+      ]
+    },
+    {
+      "id": "growth-opportunities",
+      "title": "Growth & Development: Investing in Our People",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Growth isn't optional - it's essential. We provide comprehensive opportunities for professional development, career advancement, and personal growth that help our people reach their full potential."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Growth Framework] --> B[Career Development]\n    A --> C[Skill Building]\n    A --> D[Mentorship]\n    A --> E[Leadership Development]\n    A --> F[Internal Mobility]\n    \n    B --> G[Career Planning]\n    B --> H[Performance Reviews]\n    B --> I[Promotion Paths]\n    \n    C --> J[Online Learning]\n    C --> K[Technical Training]\n    C --> L[Soft Skills]\n    \n    D --> M[Mentor Matching]\n    D --> N[Reverse Mentoring]\n    D --> O[Executive Coaching]\n    \n    E --> P[Leadership Training]\n    E --> Q[Management Programs]\n    E --> R[Executive Development]\n    \n    F --> S[Job Rotation]\n    F --> T[Internal Transfers]\n    F --> U[Project Opportunities]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Training Completion", "value": "92%" },
+            { "label": "Internal Promotions", "value": "68%" },
+            { "label": "Mentorship Participation", "value": "84%" },
+            { "label": "Skill Development", "value": "+45%" },
+            { "label": "Leadership Pipeline", "value": "156 roles" },
+            { "label": "Career Satisfaction", "value": "9.2/10" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "community-impact",
+      "title": "Community Impact: Giving Back Together",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our commitment to social responsibility extends beyond our company walls. We believe in using our resources, talents, and platform to create positive change in the communities where we live and work."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Community Investment Areas\n    \"Education & STEM\" : 35\n    \"Environmental Initiatives\" : 28\n    \"Diversity & Inclusion\" : 20\n    \"Healthcare Access\" : 12\n    \"Economic Development\" : 5"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Community Impact] --> B[Employee Volunteer Program]\n    A --> C[Philanthropic Giving]\n    A --> D[Skill-Based Volunteering]\n    A --> E[Partnership Programs]\n    A --> F[Product Donations]\n    \n    B --> G[Paid Volunteer Time]\n    B --> H[Team Building Events]\n    B --> I[Global Days of Service]\n    \n    C --> J[Matching Donations]\n    C --> K[Corporate Grants]\n    C --> L[Emergency Relief]\n    \n    D --> M[Technical Mentoring]\n    D --> N[Design Consulting]\n    D --> O[Business Advisory]\n    \n    E --> P[Non-Profit Partnerships]\n    E --> Q[Industry Alliances]\n    E --> R[Government Programs]\n    \n    F --> S[Free Access Programs]\n    F --> T[Educational Licenses]\n    F --> U[Research Grants]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Volunteer Hours", "value": "25,000+" },
+            { "label": "Community Partners", "value": "150+" },
+            { "label": "Philanthropic Giving", "value": "$2.5M" },
+            { "label": "STEM Students Reached", "value": "10,000+" },
+            { "label": "Diversity Programs", "value": "25 initiatives" },
+            { "label": "Impact Score", "value": "9.4/10" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "future-culture",
+      "title": "Future Culture: Evolving Together",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "As we grow and evolve, so does our culture. We're committed to maintaining the core values that have made us successful while adapting to new challenges and opportunities."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[Current Culture] --> B[Scale with Purpose]\n    A --> C[Digital Transformation]\n    A --> D[Global Expansion]\n    A --> E[Innovation Culture]\n    B --> F[Future State]\n    C --> F\n    D --> F\n    E --> F\n    \n    F --> G[Hybrid-First Workplace]\n    F --> H[AI-Augmented Teams]\n    F --> I[Purpose-Driven Growth]\n    F --> J[Sustainable Operations]\n    \n    style A fill:#f59e0b,color:#fff\n    style B fill:#d97706,color:#fff\n    style C fill:#b45309,color:#fff\n    style D fill:#92400e,color:#fff\n    style E fill:#78350f,color:#fff\n    style F fill:#451a03,color:#fff\n    style G fill:#d97706,color:#fff\n    style H fill:#b45309,color:#fff\n    style I fill:#92400e,color:#fff\n    style J fill:#78350f,color:#fff"
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "The future of work isn't about where we work - it's about how we work together, learn together, and grow together. Culture is the foundation that will carry us forward.",
+            "cite": "Jennifer Walsh, Chief People Officer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Culture & People Glossary",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}

@@ -3,12 +3,22 @@
   "theme": {
     "mode": "auto",
     "colors": {
-      "primary": "#00853F",
-      "secondary": "#64748b",
-      "background": "#f8fafc",
-      "surface": "#ffffff",
-      "text": "#1e293b",
-      "text-secondary": "#64748b"
+      "light": {
+        "primary": "#00853F",
+        "secondary": "#64748b",
+        "background": "#f8fafc",
+        "surface": "#ffffff",
+        "text": "#1e293b",
+        "text-secondary": "#64748b"
+      },
+      "dark": {
+        "primary": "#00B85A",
+        "secondary": "#94a3b8",
+        "background": "#0f1115",
+        "surface": "#171a21",
+        "text": "#ffffff",
+        "text-secondary": "#cbd5e1"
+      }
     }
   },
   "navigation": {

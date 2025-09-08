@@ -1,0 +1,244 @@
+{
+  "title": "Q4 Sales Performance Dashboard",
+  "theme": {
+    "mode": "dark",
+    "colors": {
+      "light": {
+        "primary": "#f97316",
+        "secondary": "#64748b",
+        "background": "#fef7ed",
+        "surface": "#ffffff",
+        "text": "#1a1a1a",
+        "text-secondary": "#64748b"
+      },
+      "dark": {
+        "primary": "#fb923c",
+        "secondary": "#fdba74",
+        "background": "#0f0f0f",
+        "surface": "#1a1a1a",
+        "text": "#ffffff",
+        "text-secondary": "#d4d4d8"
+      }
+    }
+  },
+  "navigation": {
+    "order": [
+      "executive-summary",
+      "revenue-metrics",
+      "sales-funnel",
+      "geographic-performance",
+      "team-leaderboard",
+      "growth-opportunities",
+      "forecast-analysis",
+      "glossary"
+    ]
+  },
+  "hero": {
+    "title": "Q4 Sales Performance",
+    "subtitle": "Record-breaking quarter with 340% growth and expanded market dominance",
+    "highlights": [
+      {
+        "metric": "Revenue Growth",
+        "value": "+340%",
+        "label": "vs Q3 2024"
+      },
+      {
+        "metric": "New Customers",
+        "value": "12,847",
+        "label": "Enterprise clients"
+      },
+      {
+        "metric": "Market Share",
+        "value": "34.7%",
+        "label": "Industry leading"
+      }
+    ],
+    "callToActions": [
+      {
+        "text": "📊 Deep Dive Analytics",
+        "link": "#revenue-metrics",
+        "primary": true
+      },
+      {
+        "text": "🎯 Growth Strategy",
+        "link": "#growth-opportunities",
+        "primary": false
+      },
+      {
+        "text": "📈 2025 Forecast",
+        "link": "#forecast-analysis",
+        "primary": false
+      }
+    ]
+  },
+  "glossary": [
+    { "term": "ARR", "definition": "Annual Recurring Revenue: Predictable annual revenue from subscription contracts." },
+    { "term": "CAC", "definition": "Customer Acquisition Cost: Total cost to acquire a new customer including marketing and sales." },
+    { "term": "LTV", "definition": "Customer Lifetime Value: Total revenue expected from a customer over their relationship." },
+    { "term": "Churn Rate", "definition": "Percentage of customers who stop using the service within a given period." },
+    { "term": "Pipeline Coverage", "definition": "Ratio of sales pipeline value to revenue target, indicating sales capacity." },
+    { "term": "Win Rate", "definition": "Percentage of sales opportunities that result in closed deals." }
+  ],
+  "sections": [
+    {
+      "id": "executive-summary",
+      "title": "Executive Summary",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Q4 delivered unprecedented performance across all key metrics, establishing new benchmarks for revenue growth and market expansion. Our strategic initiatives in enterprise sales and geographic diversification have positioned us for sustained leadership in the industry."
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Total Revenue", "value": "$47.2M" },
+            { "label": "ARR Growth", "value": "+340%" },
+            { "label": "New Customers", "value": "12,847" },
+            { "label": "Avg Deal Size", "value": "$89.3K" },
+            { "label": "Win Rate", "value": "34.7%" },
+            { "label": "CAC Payback", "value": "8.2 months" }
+          ]
+        },
+        {
+          "type": "blockquote",
+          "value": {
+            "text": "This quarter's performance demonstrates the power of strategic execution and market timing. We've not only met our ambitious targets but exceeded them by building lasting customer relationships and expanding our market footprint.",
+            "cite": "Sarah Chen, Chief Revenue Officer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "revenue-metrics",
+      "title": "Revenue Performance Deep Dive",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our revenue composition shows strong diversification with enterprise contracts representing 78% of total ARR. The strategic focus on large deals has significantly improved our average contract value and reduced customer acquisition costs."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Revenue Composition Q4\n    \"Enterprise ($10K+)\" : 78\n    \"Mid-Market ($1K-$10K)\" : 18\n    \"SMB (<$1K)\" : 4"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Q4 Revenue: $47.2M] --> B[Enterprise: $36.8M]\n    A --> C[Mid-Market: $8.5M]\n    A --> D[SMB: $1.9M]\n    \n    B --> E[New Business: $28.3M]\n    B --> F[Expansion: $8.5M]\n    \n    E --> G[Large Enterprise: $22.1M]\n    E --> H[Mid-Enterprise: $6.2M]\n    \n    style A fill:#f97316,color:#000\n    style B fill:#ea580c,color:#fff\n    style C fill:#dc2626,color:#fff\n    style D fill:#b91c1c,color:#fff\n    style E fill:#fb923c,color:#000\n    style F fill:#fdba74,color:#000\n    style G fill:#fed7aa,color:#000\n    style H fill:#ffedd5,color:#000"
+        }
+      ]
+    },
+    {
+      "id": "sales-funnel",
+      "title": "Sales Funnel Performance",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our sales funnel shows exceptional efficiency with a 34.7% win rate and strong pipeline coverage. The optimized qualification process has reduced time-to-close by 40% while maintaining deal quality."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[MQLs: 45,230] --> B[SQLs: 12,847]\n    B --> C[Prospects: 8,493]\n    C --> D[Opportunities: 4,247]\n    D --> E[Proposals: 1,237]\n    E --> F[Closed Won: 434]\n    \n    A --> G[Lost: 32,383 | 71.3%]\n    B --> H[Lost: 4,354 | 34.1%]\n    C --> I[Lost: 4,246 | 51.0%]\n    D --> J[Lost: 2,813 | 67.7%]\n    E --> K[Lost: 803 | 67.4%]\n    \n    style A fill:#fef3c7,color:#000\n    style B fill:#fde68a,color:#000\n    style F fill:#16a34a,color:#fff\n    style G fill:#dc2626,color:#fff\n    style H fill:#dc2626,color:#fff\n    style I fill:#dc2626,color:#fff\n    style J fill:#dc2626,color:#fff\n    style K fill:#dc2626,color:#fff"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Win Rate", "value": "34.7%" },
+            { "label": "Time to Close", "value": "84 days" },
+            { "label": "Avg Deal Size", "value": "$89.3K" },
+            { "label": "Pipeline Coverage", "value": "4.2x" },
+            { "label": "Lead Velocity", "value": "+156%" },
+            { "label": "Conversion Rate", "value": "0.96%" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "geographic-performance",
+      "title": "Geographic Market Performance",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Q4 marked our successful expansion into new markets with North America leading revenue generation, followed by strong performance in EMEA and APAC regions."
+        },
+        {
+          "type": "mermaid",
+          "value": "pie title Geographic Revenue Distribution\n    \"North America\" : 54\n    \"EMEA\" : 28\n    \"APAC\" : 12\n    \"LATAM\" : 6"
+        },
+        {
+          "type": "mermaid",
+          "value": "graph LR\n    A[North America] --> B[Revenue: $25.5M]\n    A --> C[Growth: +280%]\n    A --> D[Customers: 7,234]\n    \n    E[EMEA] --> F[Revenue: $13.2M]\n    E --> G[Growth: +420%]\n    E --> H[Customers: 3,892]\n    \n    I[APAC] --> J[Revenue: $5.7M]\n    I --> K[Growth: +380%]\n    I --> L[Customers: 1,456]\n    \n    M[LATAM] --> N[Revenue: $2.8M]\n    M --> O[Growth: +520%]\n    M --> P[Customers: 265]\n    \n    style A fill:#3b82f6,color:#fff\n    style E fill:#10b981,color:#fff\n    style I fill:#f59e0b,color:#fff\n    style M fill:#ef4444,color:#fff"
+        }
+      ]
+    },
+    {
+      "id": "team-leaderboard",
+      "title": "Team Performance Leaderboard",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Our sales teams demonstrated exceptional performance with several representatives achieving record-breaking results. The collaborative approach and strategic alignment drove unprecedented success."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[Top Performers Q4] --> B[Sarah Chen: $8.2M]\n    A --> C[Marcus Rodriguez: $6.7M]\n    A --> D[Jennifer Wu: $5.9M]\n    A --> E[David Park: $5.4M]\n    A --> F[Emma Thompson: $4.8M]\n    \n    B --> G[Enterprise Focus]\n    C --> H[Mid-Market Specialist]\n    D --> I[Renewal Champion]\n    E --> J[New Business]\n    F --> K[Strategic Accounts]\n    \n    style A fill:#f97316,color:#fff\n    style B fill:#dc2626,color:#fff\n    style C fill:#ea580c,color:#fff\n    style D fill:#fb923c,color:#000\n    style E fill:#fdba74,color:#000\n    style F fill:#fed7aa,color:#000"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "Top Performer", "value": "$8.2M" },
+            { "label": "Team Average", "value": "$2.1M" },
+            { "label": "Record Holders", "value": "12 reps" },
+            { "label": "Team Motivation", "value": "98%" },
+            { "label": "Knowledge Sharing", "value": "94%" },
+            { "label": "Cross-Selling", "value": "+67%" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "growth-opportunities",
+      "title": "Growth Opportunities & Strategy",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Q4 success has identified clear paths for continued growth. Market expansion, product diversification, and strategic partnerships present significant opportunities for 2025."
+        },
+        {
+          "type": "mermaid",
+          "value": "graph TD\n    A[2025 Growth Strategy] --> B[Market Expansion]\n    A --> C[Product Diversification]\n    A --> D[Strategic Partnerships]\n    A --> E[Operational Excellence]\n    \n    B --> F[APAC Scale-up]\n    B --> G[New Verticals]\n    C --> H[New Product Lines]\n    C --> I[Service Expansion]\n    D --> J[Technology Partners]\n    D --> K[Channel Partners]\n    E --> L[Process Optimization]\n    E --> M[Team Development]\n    \n    F --> N[Target: $12M]\n    G --> O[Target: $8M]\n    H --> P[Target: $15M]\n    I --> Q[Target: $6M]\n    J --> R[Target: $10M]\n    K --> S[Target: $5M]\n    L --> T[Efficiency: +40%]\n    M --> U[Productivity: +35%]\n    \n    style A fill:#16a34a,color:#fff\n    style B fill:#15803d,color:#fff\n    style C fill:#166534,color:#fff\n    style D fill:#14532d,color:#fff\n    style E fill:#22c55e,color:#000\n    style N fill:#86efac,color:#000\n    style O fill:#86efac,color:#000\n    style P fill:#86efac,color:#000\n    style Q fill:#86efac,color:#000\n    style R fill:#86efac,color:#000\n    style S fill:#86efac,color:#000\n    style T fill:#86efac,color:#000\n    style U fill:#86efac,color:#000"
+        }
+      ]
+    },
+    {
+      "id": "forecast-analysis",
+      "title": "2025 Revenue Forecast",
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Based on Q4 momentum and identified growth opportunities, we forecast 280% revenue growth for 2025 with continued market share expansion and improved operational efficiency."
+        },
+        {
+          "type": "mermaid",
+          "value": "gantt\n    title 2025 Revenue Forecast\n    dateFormat YYYY-MM\n    section Q1\n    Base Operations    :done, 2025-01, 2025-03\n    Market Expansion   :active, 2025-02, 2025-04\n    section Q2\n    Product Launch     :2025-04, 2025-06\n    Partnership Growth  :2025-05, 2025-07\n    section Q3\n    Scale Operations   :2025-07, 2025-09\n    International Expansion :2025-08, 2025-10\n    section Q4\n    Record Quarter     :2025-10, 2025-12\n    Market Leadership  :2025-11, 2025-12"
+        },
+        {
+          "type": "kpi-grid",
+          "value": [
+            { "label": "2025 Revenue Target", "value": "$187M" },
+            { "label": "Growth Rate", "value": "+280%" },
+            { "label": "Market Share Target", "value": "45%" },
+            { "label": "New Markets", "value": "8 regions" },
+            { "label": "Team Expansion", "value": "150 roles" },
+            { "label": "Customer Target", "value": "45,000" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Sales Terminology Guide",
+      "content": [
+        { "type": "glossary" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+vendor/
+**/*.min.*
+node_modules/
+dist/
+build/
+.git/
+.cursor/
+
+

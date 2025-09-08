@@ -3,15 +3,22 @@
   "theme": {
     "mode": "auto",
     "colors": {
-      "primary": "#dc2626",
-      "secondary": "#64748b",
-      "background": "#f8fafc",
-      "surface": "#ffffff",
-      "text": "#1e293b",
-      "text-secondary": "#64748b",
-      "primary-background": "#dc2626",
-      "primary-inverse": "#FFF",
-      "primary-focus": "rgba(220, 38, 38, 0.25)"
+      "light": {
+        "primary": "#dc2626",
+        "secondary": "#64748b",
+        "background": "#f8fafc",
+        "surface": "#ffffff",
+        "text": "#1e293b",
+        "text-secondary": "#64748b"
+      },
+      "dark": {
+        "primary": "#ef4444",
+        "secondary": "#94a3b8",
+        "background": "#0f1115",
+        "surface": "#171a21",
+        "text": "#ffffff",
+        "text-secondary": "#cbd5e1"
+      }
     }
   },
   "navigation": {

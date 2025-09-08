@@ -35,6 +35,7 @@
             --pico-border-radius: 6px;
 
             --ad: 0.6s;
+            --overlay-rgb: 0,0,0;
         }
 
         
@@ -133,11 +134,18 @@
         }
 
         
-        .layout-wrapper {
+        /* page gutter (left only on desktop so the TOC can stay flush right) */
+        :root { --page-gutter: clamp(16px, 4vw, 48px); }
+
+        .layout-wrapper,
+        .grid-with-rail {
             display: grid;
-            grid-template-columns: 1fr 200px;
+            grid-template-columns: minmax(0, 1fr) max-content;
             gap: 1.25rem;
             align-items: start;
+            width: 100%;
+            padding-left: var(--page-gutter);   /* ← restore breathing room on the left */
+            /* no right padding here, so the rail can hug the right edge */
         }
 
         
@@ -145,18 +153,39 @@
             min-width: 0;
         }
 
+        /* keep the text column from getting too wide; still left-aligned */
+        #presentation-content.container {
+            max-width: 90ch;           /* wider for better content density */
+            justify-self: start;       /* stay left within the grid track */
+            width: 100%;
+        }
+
+        /* Allow charts/images to be wider than the text measure */
+        #presentation-content .mermaid,
+        #presentation-content figure{
+          max-width: 100%;
+        }
+
         #toc-nav {
             position: sticky;
             top: 20px;
-            
+            justify-self: end;         /* push to the far right */
+            width: max-content;        /* shrink-wrap to contents */
+            max-width: 32ch;           /* cap so long items wrap nicely */
+            padding: 0.4rem;
+
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             overflow-x: hidden;
             box-sizing: border-box;
-            padding: 0.4rem;
-            scrollbar-gutter: stable both-edges;
-            scrollbar-width: thin;
+
+            /* never show a scrollbar, but keep wheel/touch scrolling */
+            scrollbar-width: none;          /* Firefox */
+            -ms-overflow-style: none;       /* old Edge/IE */
+            overscroll-behavior: contain;   /* don't bubble to page */
+            scrollbar-gutter: auto;         /* remove gutter reservation */
         }
+        #toc-nav::-webkit-scrollbar { display: none; }  /* WebKit */
 
         
         #toc-nav h4 {
@@ -186,8 +215,8 @@
             font-size: 0.7rem;
             font-weight: 500;
             line-height: 1.2;
-            overflow-wrap: normal;
-            word-break: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
             white-space: normal;
             hyphens: none;
             border-left: 3px solid transparent;
@@ -257,14 +286,28 @@
             background: var(--background);
         }
 
-        .presentation-mode .layout-wrapper {
-            grid-template-columns: 1fr !important;
+        /* Fullscreen keeps 2 columns and shows the TOC */
+        .presentation-mode .layout-wrapper{
+            grid-template-columns: minmax(0,1fr) max-content !important;
             max-width: none !important;
-            padding: 0 4rem;
+            padding-inline: var(--page-gutter);
         }
 
-        .presentation-mode #toc-nav {
-            display: none !important;
+        /* Let the content column expand in fullscreen */
+        .presentation-mode #presentation-content.container{
+          max-width: clamp(72ch, 90vw, 1400px);
+        }
+        .presentation-mode #toc-nav{
+            display: block !important;
+            position: sticky;
+            top: 16px;
+            align-self: start;
+            background: var(--surface);
+            border: 1px solid var(--secondary);
+            border-radius: var(--pico-border-radius);
+            padding: .4rem;
+            max-height: calc(100vh - 32px);
+            overflow: auto;
         }
 
         .presentation-mode #nav-controls {
@@ -272,24 +315,46 @@
             z-index: 1000;
         }
 
-        .presentation-mode .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* Sections should scroll naturally in fullscreen */
+        .presentation-mode section{
+            min-height: auto;
+            display: block;
+            align-items: flex-start;
+            padding: 2rem 0;
         }
 
-        .presentation-mode section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 4rem 0;
+        /* Keep the hero tall if you like the opening slide feel */
+        .presentation-mode .hero{
+            min-height: 90vh;
+            display: block;
+            align-items: flex-start;
+        }
+
+        /* Optional: small screens can still hide the TOC in fullscreen */
+        @media (max-width: 992px){
+            .presentation-mode .layout-wrapper{ grid-template-columns: 1fr !important; }
+            .presentation-mode #toc-nav{ display: none !important; }
+        }
+
+        /* Allow hiding the TOC on demand in both normal and fullscreen modes */
+        body.toc-hidden #toc-nav{ display: none !important; }
+
+        /* Improve Mermaid diagram height in fullscreen mode */
+        .presentation-mode .mermaid {
+            min-height: 0;         /* was 700px */
+            padding: 1.25rem;      /* lighter padding so the chart can grow */
+        }
+
+        .presentation-mode .mermaid svg {
+            min-height: 0;         /* allow natural sizing */
+            height: auto;
         }
 
         @media (max-width: 992px) {
-            .layout-wrapper {
+            .layout-wrapper,
+            .grid-with-rail {
                 grid-template-columns: 1fr;
+                padding-inline: var(--page-gutter);  /* symmetric gutters on small screens */
             }
             #toc-nav {
                 display: none;
@@ -339,7 +404,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 700;
             margin-bottom: 1.5rem;
             position: relative;
@@ -350,7 +415,7 @@
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-size: clamp(1rem, 2vw, 1.2rem);
             color: var(--text-secondary);
             margin-bottom: 3rem;
             position: relative;
@@ -430,7 +495,7 @@
         }
 
         .highlight-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 0.5rem;
@@ -563,7 +628,7 @@
             }
 
             .highlight-value {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
 
             .hero-actions {
@@ -574,6 +639,10 @@
             .hero a[role="button"] {
                 min-width: 250px;
                 text-align: center;
+            }
+
+            .kpi-card .value {
+                font-size: 1.5rem;
             }
         }
 
@@ -595,6 +664,8 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
+            /* enables cqi units to scale text by card width */
+            container-type: inline-size;
         }
 
         .kpi-card::before {
@@ -618,20 +689,103 @@
             transform: scaleX(1);
         }
 
-        .kpi-card .value {
-            font-size: 3rem;
+        /* VALUE */
+        .kpi-card .value{
             font-weight: 800;
-            color: var(--primary);
             line-height: 1.1;
             margin-bottom: 0.5rem;
+            /* fluid, per-card sizing */
+            font-size: clamp(1rem, 7cqi, 2rem);
+            color: var(--primary);
+
+            /* wrapping: never split words */
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            hyphens: none;
+            text-wrap: balance;   /* nicer breaks; falls back below */
+
+            /* multi-line clamp with ellipsis as last resort */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;   /* allow up to 2 lines */
+            line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .kpi-card .label {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
+        /* LABEL */
+        .kpi-card .label{
             font-weight: 600;
+            line-height: 1.2;
+            margin-top: 0.5rem;
+            /* fluid, per-card sizing */
+            font-size: clamp(.85rem, 3.5cqi, 1rem);
+            color: var(--text-secondary);
+
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            hyphens: none;
+            text-wrap: pretty;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;   /* allow up to 2 lines */
+            line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+
+        /* Fallback when container queries aren't supported */
+        @supports not (container-type: inline-size){
+            .kpi-card .value{ font-size: clamp(1rem, 4vw, 2rem); }
+            .kpi-card .label{ font-size: clamp(.85rem, 2vw, 1rem); }
+        }
+
+        /* Admonitions — theme-aware, light/dark friendly */
+        .admonition{
+            --admon-accent: var(--primary);
+            --admon-bg: color-mix(in srgb, var(--surface) 92%, transparent);
+            --admon-border: color-mix(in srgb, var(--admon-accent) 25%, var(--secondary));
+
+            border: 1px solid var(--admon-border);
+            border-left: 8px solid var(--admon-accent);
+            background: var(--admon-bg);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        }
+
+        .admonition-head{
+            display: flex; align-items: center; gap: .5rem;
+            font-weight: 700; color: var(--admon-accent);
+            margin-bottom: .35rem;
+        }
+        .admonition-head::before{
+            content: "📝"; /* default icon (NOTE) */
+            font-size: 1.1em; line-height: 1;
+        }
+
+        .admonition-body :is(p,ul,ol,pre,table,blockquote){ margin: .35rem 0; }
+        .admonition-body > :first-child{ margin-top: 0; }
+        .admonition-body > :last-child{ margin-bottom: 0; }
+
+        /* Tone variants */
+        .admonition.note{  --admon-accent: var(--primary); }
+        .admonition.tip{   --admon-accent: #16a34a; }   /* green */
+        .admonition.warn{  --admon-accent: #f59e0b; }   /* amber */
+        .admonition.quote{ --admon-accent: #64748b; }   /* slate */
+
+        /* Icons per variant (emoji = zero assets) */
+        .admonition.tip   .admonition-head::before{ content: "💡"; }
+        .admonition.warn  .admonition-head::before{ content: "⚠️"; }
+        .admonition.quote .admonition-head::before{ content: "❝"; }
+
+        /* Reduced motion & print-friendly */
+        @media (prefers-reduced-motion: reduce){ .admonition{ box-shadow: none; } }
+        @media print{ .admonition{ box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 
         section {
             padding: 3rem 0;
@@ -684,28 +838,18 @@
             background: var(--surface);
             border: 1px solid var(--secondary);
             border-radius: 16px;
-            padding: 1.5rem;
-            margin: 2rem 0;
+            padding: 1.25rem;
+            margin: 3rem 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.1),
                 0 2px 8px rgba(0, 0, 0, 0.05);
             position: relative;
+            display: flex;
+            justify-content: center;
+            min-height: 0;
         }
 
-        
-        [data-theme="dark"] .mermaid {
-            --mermaid-text-color: #ffffff;
-        }
-
-        
-        [data-theme="dark"] .mermaid svg text,
-        [data-theme="dark"] .mermaid svg tspan {
-            fill: #ffffff !important;
-        }
-        [data-theme="dark"] .mermaid svg foreignObject div {
-            color: #ffffff !important;
-        }
 
         
         .mermaid svg text,
@@ -743,19 +887,13 @@
             max-width: 100%;
             height: auto;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: contrast(1.05) saturate(1.1);
             overflow: visible;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .mermaid:hover svg {
-            filter: brightness(1.05) contrast(1.1) saturate(1.15);
-            transform: scale(1.005);
-        }
 
         
-        [data-theme="dark"] .mermaid svg {
-            filter: none;
-        }
 
         
         #modal-overlay {
@@ -764,7 +902,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(var(--trgb), 0.8);
+            background: rgba(var(--overlay-rgb), 0.72);
             backdrop-filter: blur(5px);
             z-index: 2000;
             display: none;
@@ -839,8 +977,8 @@
             border-radius: 20px;
             padding: 2rem;
             margin: 0;
-            max-width: 96vw;
-            max-height: 90vh;
+            max-width: 98vw;           /* wider */
+            max-height: 95vh;          /* taller */
             overflow: auto;
             box-shadow:
                 0 25px 80px rgba(0, 0, 0, 0.2),
@@ -860,14 +998,13 @@
         }
 
         #modal-body .mermaid-modal svg {
-            width: min(94vw, 1600px) !important;
+            width: min(96vw, 2000px) !important;  /* wider and higher limit */
             height: auto !important;
             display: block !important;
             margin: 0 auto !important;
-            max-height: 85vh !important;
+            max-height: 90vh !important;           /* taller */
             visibility: visible !important;
             opacity: 1 !important;
-            filter: brightness(1.1) contrast(1.1) saturate(1.2);
             transition: all 0.3s ease;
         }
 
@@ -884,6 +1021,10 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
+        /* Keep legends readable regardless of theme */
+        .mermaid g.legend text { fill: var(--text) !important; }
+        .mermaid .legend rect { fill: var(--surface); stroke: var(--secondary); }
+
         
         dfn {
             text-decoration: underline dotted;
@@ -894,22 +1035,24 @@
         }
 
         dfn:hover::after {
-            content: attr(data-definition);
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
+            /* Disabled in favor of JS tooltip to prevent viewport overflow */
+            content: none !important;
+        }
+
+        /* JS-driven glossary tooltip */
+        #glossary-tooltip {
+            position: fixed;
+            max-width: min(320px, calc(100vw - 16px));
             padding: 0.5rem 0.75rem;
-            width: 280px;
             background: var(--pico-primary);
             color: var(--pico-primary-inverse);
             border-radius: var(--pico-border-radius);
             font-size: 0.875rem;
             text-align: left;
             line-height: 1.4;
-            white-space: normal;
-            z-index: 10;
+            z-index: 2002;
             box-shadow: var(--pico-card-box-shadow);
+            display: none;
             pointer-events: none;
         }
 
@@ -1006,6 +1149,88 @@
         .fade-in { animation: fadeIn .4s ease both; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Markdown HTML elements styling */
+        ul, ol {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--surface);
+            border: 1px solid var(--secondary);
+            border-radius: var(--pico-border-radius);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--secondary);
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(var(--prgb), 0.05);
+        }
+
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--secondary);
+            border-radius: var(--pico-border-radius);
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            background: var(--surface);
+            border: 1px solid var(--secondary);
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.25rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875em;
+        }
+
+        pre code {
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid var(--secondary);
+            margin: 2rem 0;
+        }
+
+        strong {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        em {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        del {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
     </style>
 </head>
 <body>
@@ -1045,10 +1270,18 @@
                 <polyline points="9,18 15,12 9,6"></polyline>
             </svg>
         </button>
+        <button id="toc-toggle" aria-label="Toggle table of contents" title="Toggle TOC (H) - Works in both normal and fullscreen modes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="8" height="16"></rect>
+                <rect x="13" y="4" width="8" height="3"></rect>
+                <rect x="13" y="9" width="8" height="3"></rect>
+                <rect x="13" y="14" width="8" height="6"></rect>
+            </svg>
+        </button>
     </div>
 
     
-    <input type="file" id="json-file-input" accept=".json" style="display: none;">
+    <input type="file" id="json-file-input" accept=".json,.md" style="display: none;">
 
     
     <div id="loading-indicator" style="display: none;">
@@ -1056,13 +1289,12 @@
         <p>Loading presentation...</p>
     </div>
 
-    <div class="layout-wrapper container">
-        
-        <main id="presentation-content"></main>
+    <div class="layout-wrapper grid-with-rail">
+        <main id="presentation-content" class="container"></main>
 
-        <nav id="toc-nav">
+        <aside id="toc-nav" role="navigation" aria-label="Table of contents">
             <ul id="toc-list"></ul>
-        </nav>
+        </aside>
     </div>
 
     
@@ -1077,13 +1309,11 @@
 
 
     
-    
+
     <script src="vendor/mermaid.min.js"></script>
+    <script src="vendor/marked.min.js"></script>
 
-    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
             const config = {
                 contentEl: document.getElementById('presentation-content'),
                 tocEl: document.getElementById('toc-list'),
@@ -1099,37 +1329,154 @@
             // AbortController for cleaning up event listeners on reload
             let abortController = new AbortController();
 
+            // Theme engine (single source of truth)
+            const Theme = (() => {
+                const listeners = new Set();
+                let mode = 'light';
+
+                function getPalette(pd, which) {
+                    const base = pd?.theme?.colors?.[which] || {};
+                    return {
+                        primary:        base.primary        || '#2563eb',
+                        secondary:      base.secondary      || '#6b7280',
+                        background:     base.background     || (which === 'dark' ? '#1a1a1a' : '#ffffff'),
+                        surface:        base.surface        || (which === 'dark' ? '#2a2a2a' : '#f8f9fa'),
+                        text:           base.text           || (which === 'dark' ? '#ffffff' : '#1a1a1a'),
+                        textSecondary:  base['text-secondary'] || (which === 'dark' ? '#a1a1aa' : '#6c757d')
+                    };
+                }
+
+                const toRgb = (hex) => {
+                    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(hex).trim());
+                    if (!m) return '0,0,0';
+                    return `${parseInt(m[1],16)}, ${parseInt(m[2],16)}, ${parseInt(m[3],16)}`;
+                };
+
+                function applyCss(p) {
+                    const root = document.documentElement;
+                    root.setAttribute('data-theme', mode);
+                    root.style.setProperty('--primary', p.primary);
+                    root.style.setProperty('--secondary', p.secondary);
+                    root.style.setProperty('--background', p.background);
+                    root.style.setProperty('--surface', p.surface);
+                    root.style.setProperty('--text', p.text);
+                    root.style.setProperty('--text-secondary', p.textSecondary);
+                    root.style.setProperty('--prgb', toRgb(p.primary));
+                    root.style.setProperty('--srgb', toRgb(p.secondary));
+                    root.style.setProperty('--trgb', toRgb(p.text));
+                    // Pico compat
+                    root.style.setProperty('--pico-primary', p.primary);
+                    root.style.setProperty('--pico-secondary', p.secondary);
+                    root.style.setProperty('--pico-primary-background', p.primary);
+                    root.style.setProperty('--pico-primary-inverse', '#fff');
+                    root.style.setProperty('--pico-primary-focus', `rgba(${toRgb(p.primary)}, .25)`);
+                    root.style.setProperty('--pico-primary-hover', `color-mix(in srgb, ${p.primary} 90%, black)`);
+                    root.style.setProperty('--pico-h5-color', p.text);
+                    root.style.setProperty('--pico-muted-border-color', p.secondary);
+                    root.style.setProperty('--pico-del-color', p.primary);
+                    root.style.setProperty('--pico-code-background-color', p.surface);
+                    root.style.setProperty('--pico-code-border-color', p.secondary);
+                }
+
+                async function apply(pd = window.currentPresentationData) {
+                    applyCss(getPalette(pd, mode));
+                    await new Promise(r => requestAnimationFrame(r));
+                    listeners.forEach(fn => fn({ mode }));
+                }
+
+                async function setMode(next, pd = window.currentPresentationData) {
+                    mode = next === 'dark' ? 'dark' : 'light';
+                    localStorage.setItem('theme', mode);
+                    await apply(pd);
+                }
+
+                async function init(pd) {
+                    const saved = localStorage.getItem('theme');
+                    mode = (saved === 'light' || saved === 'dark') ? saved : (pd?.theme?.mode || 'light');
+                    return apply(pd);
+                }
+
+                function onChange(fn){ listeners.add(fn); return () => listeners.delete(fn); }
+
+                return { get mode(){return mode;}, init, setMode, onChange, apply };
+            })();
+
+            // Unified Mermaid config builder
+            function buildMermaidConfig() {
+                const s = getComputedStyle(document.documentElement);
+                const val = (v, fb) => s.getPropertyValue(v).trim() || fb;
+                const dark = Theme.mode === 'dark';
+
+                let base = {
+                    startOnLoad: false,
+                    securityLevel: 'strict',
+                    theme: (window.currentPresentationData?.mermaid?.theme) || (dark ? 'dark' : 'default'),
+                    fontFamily: (window.currentPresentationData?.mermaid?.fontFamily) || 'system-ui, -apple-system, sans-serif',
+                    flowchart: { useMaxWidth: true, htmlLabels: false, curve: 'basis', padding: 16, nodeSpacing: 60, rankSpacing: 70 },
+                    sequence:  { useMaxWidth: true, htmlLabels: false, diagramMarginX: 50, diagramMarginY: 20 },
+                    gantt:     { useMaxWidth: true, htmlLabels: false, barHeight: 32, barGap: 12, topPadding: 60, leftPadding: 120, axisFormat: '%m-%d' },
+                    pie:       { useMaxWidth: true, htmlLabels: false },
+                    themeVariables: {
+                        primaryColor:        val('--primary', '#2563eb'),
+                        primaryTextColor:    val('--text', '#1a1a1a'),
+                        primaryBorderColor:  val('--primary', '#2563eb'),
+                        lineColor:           val('--primary', '#2563eb'),
+                        sectionBkgColor:     val('--surface', dark ? '#2a2a2a' : '#f8f9fa'),
+                        altSectionBkgColor:  val('--background', dark ? '#1a1a1a' : '#ffffff'),
+                        gridColor:           val('--secondary', '#6b7280'),
+                        edgeLabelBackground: val('--surface', dark ? '#2a2a2a' : '#f8f9fa'),
+                        fontSize: '16px',
+                        pieTitleTextSize: '22px',
+                        pieSectionTextSize: '16px',
+                        pieLegendTextSize: '14px',
+                        ganttBarHeight: 32, ganttBarGap: 12, ganttLeftPadding: 120
+                    }
+                };
+
+                // ⬇️ bring in deck overrides from schema's mermaid.config (whitelisted)
+                const deckCfg = window.currentPresentationData?.mermaid?.config;
+                if (deckCfg) base = deepMergeAllowed(base, deckCfg);
+
+                return base;
+            }
+
             // Simple translation dictionary for landing page
             const translations = {
                 en: {
-                    title: "Load Your Presentation JSON",
-                    subtitle: "Local, secure, and fully open source. No servers. No tracking. Works on GitHub Pages.",
-                    select: "Select JSON",
+                    title: "Load Your Presentation",
+                    subtitle: "Local, secure, and fully open source. Supports JSON & Markdown with rich formatting. No servers. No tracking. Works on GitHub Pages.",
+                    select: "Select File",
                     github: "View on GitHub",
                     chipLocal: "🔒 All local",
-                    chipJson: "🧩 JSON-driven",
+                    chipJson: "🧩 JSON & Markdown",
+                    chipMarkdown: "📝 Rich formatting",
                     chipMermaid: "🖼️ Mermaid supported",
                     chipLicense: "📄 MIT License",
                     howTitle: "How it works",
-                    howCopy: "Click <strong>Select JSON</strong> to render your presentation instantly. Or host this page on GitHub Pages and pass <code>?data=URL</code> to a JSON file.",
+                    howCopy: "Click <strong>Select File</strong> to render your presentation instantly. Supports JSON and Markdown files with full formatting—all local in your browser.",
                     secTitle: "Security",
                     secCopy: "Everything runs in your browser. No data leaves your machine. External links open in a new tab with <code>rel=\"noopener\"</code>.",
+                    markdownTitle: "Markdown Support",
+                    markdownCopy: "Write presentations naturally with full Markdown formatting: <strong>bold</strong>, <em>italic</em>, lists, tables, code blocks, and more. Front matter supports themes, navigation, and glossary.",
                     licTitle: "License",
                     licCopy: "Distributed under the <strong>MIT License</strong>. See <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> for details."
                 },
                 fr: {
-                    title: "Chargez votre JSON de présentation",
-                    subtitle: "Local, sécurisé et entièrement open source. Aucun serveur. Aucun suivi. Fonctionne sur GitHub Pages.",
-                    select: "Sélectionner JSON",
+                    title: "Chargez votre présentation",
+                    subtitle: "Local, sécurisé et entièrement open source. Supporte JSON & Markdown avec formatage riche. Aucun serveur. Aucun suivi. Fonctionne sur GitHub Pages.",
+                    select: "Sélectionner un fichier",
                     github: "Voir sur GitHub",
                     chipLocal: "🔒 Tout local",
-                    chipJson: "🧩 Piloté par JSON",
+                    chipJson: "🧩 JSON & Markdown",
+                    chipMarkdown: "📝 Formatage riche",
                     chipMermaid: "🖼️ Mermaid supporté",
                     chipLicense: "📄 Licence MIT",
                     howTitle: "Comment ça marche",
-                    howCopy: "Cliquez sur <strong>Sélectionner JSON</strong> pour rendre votre présentation instantanément. Ou hébergez cette page sur GitHub Pages et passez <code>?data=URL</code> à un fichier JSON.",
+                    howCopy: "Cliquez sur <strong>Sélectionner un fichier</strong> pour rendre votre présentation instantanément. Supporte les fichiers JSON et Markdown avec formatage complet—tout fonctionne localement dans votre navigateur.",
                     secTitle: "Sécurité",
                     secCopy: "Tout fonctionne dans votre navigateur. Aucune donnée ne quitte votre machine. Les liens externes s'ouvrent dans un nouvel onglet avec <code>rel=\"noopener\"</code>.",
+                    markdownTitle: "Support Markdown",
+                    markdownCopy: "Écrivez vos présentations naturellement avec le formatage Markdown complet : <strong>gras</strong>, <em>italique</em>, listes, tableaux, blocs de code, et plus encore. Le front matter supporte les thèmes, la navigation et le glossaire.",
                     licTitle: "Licence",
                     licCopy: "Distribué sous la <strong>licence MIT</strong>. Voir <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> pour les détails."
                 }
@@ -1150,6 +1497,19 @@
                         setTimeout(() => inThrottle = false, limit);
                     }
                 }
+            }
+
+            // Slugify helper for generating IDs from headings
+            function slugify(text) {
+                return text
+                    .toString()
+                    .toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-')
+                    .replace(/^-+/, '')
+                    .replace(/-+$/, '');
             }
 
             /**
@@ -1228,27 +1588,253 @@
             
 
             /**
-             * Loads presentation data from various sources
+             * Handles uploaded presentation files (local only)
              */
-            async function loadPresentationData(uploadedData = null) {
-                // If we have uploaded data, use it directly
-                if (uploadedData) { return uploadedData; }
+            async function handleFile(file) {
+                const text = await readFileAsText(file);
+                const isMd = file.name.toLowerCase().endsWith('.md');
+                const data = isMd ? parseMarkdownToPresentation(text) : JSON.parse(text);
+                await init(data);
+            }
 
-                // Check for data parameter in URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const dataParam = urlParams.get('data');
+            /**
+             * Parses Markdown with JSON front matter into presentation data structure
+             */
+            function parseMarkdownToPresentation(mdText) {
+                let frontMatter = {};
+                let bodyMd = mdText;
 
-                if (dataParam) {
+                // Extract front matter from first fenced block with 'frontmatter' in info
+                // Tolerate 3+ backticks/tilde fences and optional whitespace
+                const frontMatterMatch = mdText.match(/^([`~]{3,})\s*(?:json\s+)?frontmatter\s*\n([\s\S]*?)\n\1\s*(?:\n|$)/m);
+                if (frontMatterMatch) {
                     try {
-                        const response = await fetch(dataParam);
-                        if (response.ok) { const data = await response.json(); return data; }
-                    } catch (error) {
-                        // Ignore and fall through to landing page
+                        frontMatter = JSON.parse(frontMatterMatch[2]);
+                        bodyMd = mdText.replace(frontMatterMatch[0], '');
+                    } catch (e) {
+                        console.warn('Invalid front matter JSON:', e);
                     }
                 }
 
-                // No default load path: force landing page
-                throw new Error('No presentation provided. Upload a JSON file or pass ?data=URL to begin.');
+                // Tokenize the Markdown body with inline parsing enabled
+                const tokens = marked.lexer(bodyMd, {
+                    gfm: true,
+                    breaks: true,
+                    mangle: false,
+                    pedantic: false,
+                    smartLists: true,
+                    smartypants: false
+                });
+                const sections = [];
+                let currentSection = null;
+                let currentSubsection = null;
+
+                tokens.forEach(token => {
+                    if (token.type === 'heading') {
+                        const level = token.depth;
+                        const text = token.text.trim();
+                        let id = '';
+
+                        // Check for explicit ID at end {#id}
+                        const idMatch = text.match(/\{#([^}]+)\}$/);
+                        if (idMatch) {
+                            id = idMatch[1];
+                            token.text = text.replace(/\{#[^}]+\}$/, '').trim();
+                        } else {
+                            id = slugify(text);
+                        }
+
+                        if (level === 2) {
+                            // Section
+                            if (currentSection) {
+                                sections.push(currentSection);
+                            }
+                            currentSection = {
+                                id: id,
+                                title: token.text,
+                                content: [],
+                                subsections: []
+                            };
+                            currentSubsection = null;
+                        } else if (level === 3 && currentSection) {
+                            // Subsection
+                            currentSubsection = {
+                                id: id,
+                                title: token.text,
+                                content: []
+                            };
+                            currentSection.subsections.push(currentSubsection);
+                        }
+                    } else if (currentSection) {
+                        // Content blocks
+                        const block = convertTokenToBlock(token);
+                        if (block) {
+                            if (currentSubsection) {
+                                currentSubsection.content.push(block);
+                            } else {
+                                currentSection.content.push(block);
+                            }
+                        }
+                    }
+                });
+
+                // Push the last section
+                if (currentSection) {
+                    sections.push(currentSection);
+                }
+
+                return {
+                    title: frontMatter.title || 'Presentation',
+                    theme: frontMatter.theme,
+                    navigation: frontMatter.navigation,
+                    hero: frontMatter.hero,
+                    glossary: frontMatter.glossary,
+                    sections: sections
+                };
+            }
+
+            /**
+             * Renders a token back to HTML while preserving formatting
+             */
+            function renderTokenToHTML(token) {
+                if (!token) return '';
+
+                switch (token.type) {
+                    case 'text':
+                        return token.text;
+                    case 'strong':
+                        return `<strong>${renderTokensToHTML(token.tokens)}</strong>`;
+                    case 'em':
+                        return `<em>${renderTokensToHTML(token.tokens)}</em>`;
+                    case 'del':
+                        return `<del>${renderTokensToHTML(token.tokens)}</del>`;
+                    case 'codespan':
+                        return `<code>${token.text}</code>`;
+                    case 'link':
+                        const attrs = token.href.startsWith('http') ? ' target="_blank" rel="noopener"' : '';
+                        return `<a href="${token.href}"${attrs}>${renderTokensToHTML(token.tokens)}</a>`;
+                    case 'image':
+                        return `<img src="${token.href}" alt="${token.text}" title="${token.title || ''}">`;
+                    case 'br':
+                        return '<br>';
+                    default:
+                        if (token.tokens) {
+                            return renderTokensToHTML(token.tokens);
+                        }
+                        return token.raw || token.text || '';
+                }
+            }
+
+            /**
+             * Renders an array of tokens to HTML
+             */
+            function renderTokensToHTML(tokens) {
+                if (!tokens || !Array.isArray(tokens)) return '';
+                return tokens.map(renderTokenToHTML).join('');
+            }
+
+            /**
+             * Converts a Markdown token to a presentation block
+             */
+            function convertTokenToBlock(token) {
+                switch (token.type) {
+                    case 'paragraph':
+                        // Check for glossary placeholder
+                        if (token.text.includes('[[glossary]]')) {
+                            return { type: 'glossary' };
+                        }
+                        // Check if paragraph contains only an image using regex
+                        const imageRegex = /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)\s*$/;
+                        const imageMatch = token.text.match(imageRegex);
+                        if (imageMatch) {
+                            return {
+                                type: 'image',
+                                value: {
+                                    src: imageMatch[2],
+                                    alt: imageMatch[1],
+                                    caption: imageMatch[3] || ''
+                                }
+                            };
+                        }
+                        // For regular paragraphs, preserve HTML formatting
+                        return { type: 'paragraph', value: renderTokenToHTML(token) };
+
+                    case 'blockquote': {
+                        // Parse admonitions directly from raw Markdown lines inside the blockquote
+                        const raw = (token.raw || '').replace(/^\n+|\n+$/g, '');
+                        const lines = raw.split(/\r?\n/).map(l => l.replace(/^\s{0,3}>\s?/, ''));
+
+                        // Find first non-empty line after removing ">" prefix
+                        let firstIndex = 0;
+                        while (firstIndex < lines.length && lines[firstIndex].trim() === '') firstIndex++;
+
+                        const firstLine = lines[firstIndex] || '';
+                        const m = /^\s*\[\!(NOTE|TIP|WARN|QUOTE)\]\s*:\s*(.*)$/i.exec(firstLine);
+                        if (m) {
+                            const kind = m[1].toLowerCase();
+                            const headRaw = (m[2] || '').trim();
+                            const safeHead = headRaw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                            const bodyMd = lines.slice(firstIndex + 1).join('\n').trim();
+                            const bodyHtml = bodyMd ? marked.parse(bodyMd).trim() : '';
+
+                            return {
+                                type: 'html',
+                                value: `
+                                    <div class="admonition ${kind}" role="note" aria-label="${kind}">
+                                        <div class="admonition-head">${safeHead}</div>
+                                        <div class="admonition-body">${bodyHtml}</div>
+                                    </div>
+                                `
+                            };
+                        }
+
+                        // Fallback: treat as a regular blockquote
+                        const parsed = marked.parse(token.raw).trim();
+                        const innerMatch = /^<blockquote>([\s\S]*)<\/blockquote>\s*$/i.exec(parsed);
+                        const innerHtml = innerMatch ? innerMatch[1] : parsed;
+                        return { type: 'blockquote', value: { text: innerHtml, cite: '' } };
+                    }
+
+                    case 'list':
+                        // Delegate full list rendering (including nesting and inline styles) to Marked
+                        // Using token.raw preserves the exact structure and avoids manual reconstruction issues
+                        return { type: 'html', value: marked.parse(token.raw) };
+
+                    case 'table':
+                        const headerRow = token.header.map(cell => `<th>${marked.parseInline(cell.raw || cell.text || '')}</th>`).join('');
+                        const bodyRows = token.rows.map(row =>
+                            `<tr>${row.map(cell => `<td>${marked.parseInline(cell.raw || cell.text || '')}</td>`).join('')}</tr>`
+                        ).join('');
+                        return {
+                            type: 'html',
+                            value: `<table><thead><tr>${headerRow}</tr></thead><tbody>${bodyRows}</tbody></table>`
+                        };
+
+                    case 'code':
+                        if (token.lang === 'mermaid') {
+                            return { type: 'mermaid', value: token.text };
+                        } else if (token.lang === 'kpi-grid') {
+                            try {
+                                const data = JSON.parse(token.text);
+                                return { type: 'kpi-grid', value: data };
+                            } catch (e) {
+                                console.warn('Invalid KPI grid JSON:', e);
+                            }
+                        } else if (token.lang === 'glossary') {
+                            return { type: 'glossary' };
+                        } else {
+                            // Generic code block
+                            const lang = token.lang ? ` class="language-${token.lang}"` : '';
+                            return { type: 'html', value: `<pre><code${lang}>${token.text}</code></pre>` };
+                        }
+                        break;
+
+                    case 'hr':
+                        // Sections already have a border-bottom; suppress raw <hr> to avoid double lines
+                        return null;
+                }
+                return null;
             }
 
             /**
@@ -1335,70 +1921,86 @@
             }
 
             /**
+             * Renders the landing page
+             */
+            function renderLanding() {
+                const repoUrl = getGitHubRepoUrl();
+                config.contentEl.innerHTML = `
+                    <section class="landing-hero fade-in">
+                        <div class="landing-controls">
+                            <div class="lang-switch" role="group" aria-label="Language">
+                                <button class="lang-btn" data-lang="en">EN</button>
+                                <button class="lang-btn" data-lang="fr">FR</button>
+                            </div>
+                        </div>
+                        <div class="landing-brand">📑 Narrative Presentation</div>
+                        <h1 data-i18n="title">Load Your Presentation</h1>
+                        <p class="landing-sub" data-i18n="subtitle">Local, secure, and fully open source. Supports JSON & Markdown with rich formatting. No servers. No tracking. Works on GitHub Pages.</p>
+                        <div class="landing-actions">
+                            <input type="file" id="fallback-json-input" accept=".json,.md" style="display:none;">
+                            <button id="fallback-upload-btn" class="btn-primary" data-i18n="select">Select File</button>
+                            ${repoUrl ? `<a href="${repoUrl}" target="_blank" rel="noopener" class="btn-secondary" data-i18n="github">View on GitHub</a>` : ''}
+                            <a href="README.md" target="_blank" rel="noopener" class="btn-secondary">README</a>
+                        </div>
+                        <div class="info-chips">
+                            <span class="chip" data-i18n="chipLocal">🔒 All local</span>
+                            <span class="chip" data-i18n="chipJson">🧩 JSON & Markdown</span>
+                            <span class="chip" data-i18n="chipMarkdown">📝 Rich formatting</span>
+                            <span class="chip" data-i18n="chipMermaid">🖼️ Mermaid supported</span>
+                            <span class="chip" data-i18n="chipLicense">📄 MIT License</span>
+                        </div>
+                    </section>
+
+                    <section class="feature-grid fade-in" style="animation-delay: .1s;">
+                        <article class="card">
+                            <h3 data-i18n="howTitle">How it works</h3>
+                            <p data-i18n="howCopy">Click <strong>Select File</strong> to render your presentation instantly. Supports JSON and Markdown files with full formatting—all local in your browser.</p>
+                        </article>
+                        <article class="card">
+                            <h3 data-i18n="secTitle">Security</h3>
+                            <p data-i18n="secCopy">Everything runs in your browser. No data leaves your machine. External links open in a new tab with <code>rel=\"noopener\"</code>.</p>
+                        </article>
+                        <article class="card">
+                            <h3 data-i18n="markdownTitle">📝 Markdown Support</h3>
+                            <p data-i18n="markdownCopy">Write presentations naturally with full Markdown formatting: <strong>bold</strong>, <em>italic</em>, lists, tables, code blocks, and more. Front matter supports themes, navigation, and glossary.</p>
+                        </article>
+                        <article class="card">
+                            <h3 data-i18n="licTitle">License</h3>
+                            <p data-i18n="licCopy">Distributed under the <strong>MIT License</strong>. See <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> for details.</p>
+                        </article>
+                    </section>
+                `;
+            }
+
+            /**
              * Main function to initialize the presentation
              */
             async function init(uploadedData = null) {
+                if (!uploadedData) {
+                    renderLanding();
+                    setupLandingLanguageToggle();
+                    setupFallbackUpload();
+                    setupFileUpload();
+                    return;
+                }
+
                 try {
-                    const data = await loadPresentationData(uploadedData);
-                    const processedData = processNavigationOrder(data);
-                    currentPresentationData = processedData; // Store for potential reloading
-                    applyTheme(processedData.theme);
-                    document.title = processedData.title;
+                    const processedData = processNavigationOrder(uploadedData);
+                    currentPresentationData = processedData;
+                    await Theme.init(processedData);
+                    document.title = processedData.title || 'Presentation';
 
                     renderPresentation(processedData);
-                    processGlossary(processedData.glossary); // Automatically highlight terms
-                    initializeMermaid();
+                    processGlossary(processedData.glossary);
+                    MermaidManager.initAll();
                     setupEventListeners(processedData.sections);
-                    // Setup interactive elements after content is loaded
-                    setTimeout(setupInteractiveElements, 500);
+                    setTimeout(setupInteractiveElements, 100);
                 } catch (error) {
-                    const repoUrl = getGitHubRepoUrl();
-                    config.contentEl.innerHTML = `
-                        <section class="landing-hero fade-in">
-                            <div class="landing-controls">
-                                <div class="lang-switch" role="group" aria-label="Language">
-                                    <button class="lang-btn" data-lang="en">EN</button>
-                                    <button class="lang-btn" data-lang="fr">FR</button>
-                                </div>
-                            </div>
-                            <div class="landing-brand">📑 Narrative Presentation</div>
-                            <h1 data-i18n="title">Load Your Presentation JSON</h1>
-                            <p class="landing-sub" data-i18n="subtitle">Local, secure, and fully open source. No servers. No tracking. Works on GitHub Pages.</p>
-                            <div class="landing-actions">
-                                <input type="file" id="fallback-json-input" accept=".json" style="display:none;">
-                                <button id="fallback-upload-btn" class="btn-primary" data-i18n="select">Select JSON</button>
-                                ${repoUrl ? `<a href="${repoUrl}" target="_blank" rel="noopener" class="btn-secondary" data-i18n="github">View on GitHub</a>` : ''}
-                                <a href="README.md" target="_blank" rel="noopener" class="btn-secondary">README</a>
-                            </div>
-                            <div class="info-chips">
-                                <span class="chip" data-i18n="chipLocal">🔒 All local</span>
-                                <span class="chip" data-i18n="chipJson">🧩 JSON-driven</span>
-                                <span class="chip" data-i18n="chipMermaid">🖼️ Mermaid supported</span>
-                                <span class="chip" data-i18n="chipLicense">📄 MIT License</span>
-                            </div>
-                        </section>
-
-                        <section class="feature-grid fade-in" style="animation-delay: .1s;">
-                            <article class="card">
-                                <h3 data-i18n="howTitle">How it works</h3>
-                                <p data-i18n="howCopy">Click <strong>Select JSON</strong> to render your presentation instantly. Or host this page on GitHub Pages and pass <code>?data=URL</code> to a JSON file.</p>
-                            </article>
-                            <article class="card">
-                                <h3 data-i18n="secTitle">Security</h3>
-                                <p data-i18n="secCopy">Everything runs in your browser. No data leaves your machine. External links open in a new tab with <code>rel=\"noopener\"</code>.</p>
-                            </article>
-                            <article class="card">
-                                <h3 data-i18n="licTitle">License</h3>
-                                <p data-i18n="licCopy">Distributed under the <strong>MIT License</strong>. See <a href=\"LICENSE\" target=\"_blank\" rel=\"noopener\">LICENSE</a> for details.</p>
-                            </article>
-                        </section>
-                    `;
-
-                    // Setup fallback upload functionality
-                    setupFallbackUpload();
-
-                    // Setup landing page toggles
+                    alert(`Error loading presentation file: ${error.message}`);
+                    renderLanding();
                     setupLandingLanguageToggle();
+                    setupFallbackUpload();
+                    setupFileUpload();
                 }
             }
 
@@ -1419,8 +2021,9 @@
                     const file = event.target.files[0];
                     if (!file) return;
 
-                    if (!file.name.toLowerCase().endsWith('.json')) {
-                        alert('Please select a JSON file.');
+                    const fileName = file.name.toLowerCase();
+                    if (!fileName.endsWith('.json') && !fileName.endsWith('.md')) {
+                        alert('Please select a JSON or Markdown file.');
                         return;
                     }
 
@@ -1429,15 +2032,22 @@
                         uploadBtn.disabled = true;
 
                         const fileContent = await readFileAsText(file);
-                        const jsonData = JSON.parse(fileContent);
+                        let data;
 
-                        // Validate basic structure
-                        if (!jsonData.title || !jsonData.sections) {
-                            throw new Error('Invalid presentation format. Missing required fields (title, sections).');
+                        if (fileName.endsWith('.md')) {
+                            // Parse Markdown
+                            data = parseMarkdownToPresentation(fileContent);
+                        } else {
+                            // Parse JSON
+                            data = JSON.parse(fileContent);
+                            // Validate basic structure
+                            if (!data.title || !data.sections) {
+                                throw new Error('Invalid presentation format. Missing required fields (title, sections).');
+                            }
                         }
 
                         // Initialize with uploaded data (navigation processing happens in init)
-                        await init(jsonData);
+                        await init(data);
                     } catch (err) {
                         alert(err.message || 'Failed to load the selected file.');
                     } finally {
@@ -1476,17 +2086,20 @@
                     const processedData = processNavigationOrder(newData);
                     currentPresentationData = processedData;
 
-                    applyTheme(processedData.theme);
+                    if (processedData.theme?.mode) {
+                        await Theme.setMode(processedData.theme.mode, processedData);
+                    } else {
+                        await Theme.init(processedData);
+                    }
                     document.title = processedData.title;
 
                     renderPresentation(processedData);
                     processGlossary(processedData.glossary);
-                    initializeMermaid();
+                    MermaidManager.initAll();
                     setupEventListeners(processedData.sections);
 
-                    // Re-render Mermaid diagrams after content is loaded
+                    // Setup interactive elements after content is loaded
                     setTimeout(() => {
-                        renderMermaidDiagrams();
                         setupInteractiveElements();
                     }, 100);
                 } catch (error) { alert('Error loading the presentation file. Please check the JSON format.'); }
@@ -1526,95 +2139,6 @@
                 return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '37, 99, 235';
             }
 
-            /**
-             * Applies theme settings from the JSON file
-             */
-            function applyTheme(theme) {
-                if (!theme) return;
-
-                // Store old theme for Mermaid re-rendering
-                const oldTheme = document.documentElement.getAttribute('data-theme');
-
-                // Set light/dark mode
-                const newTheme = theme.mode || 'auto';
-                document.documentElement.setAttribute('data-theme', newTheme);
-
-                // Set custom colors by updating CSS variables
-                if (theme.colors) {
-                    // Normalize theme keys (support both textSecondary and text-secondary)
-                    const baseColors = {
-                        primary: theme.colors.primary,
-                        secondary: theme.colors.secondary,
-                        background: theme.colors.background,
-                        surface: theme.colors.surface,
-                        text: theme.colors.text,
-                        textSecondary: theme.colors.textSecondary || theme.colors['text-secondary']
-                    };
-
-                    // Compute effective colors based on mode (handles 'auto' at initial load)
-                    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    const isDark = newTheme === 'dark' || (newTheme === 'auto' && prefersDark);
-                    const colors = { ...baseColors };
-                    if (isDark) {
-                        colors.background = '#1a1a1a';
-                        colors.surface = '#2a2a2a';
-                        colors.text = '#ffffff';
-                        colors.textSecondary = '#a1a1aa';
-                    }
-
-                    // Read current CSS vars for safe fallbacks
-                    const currentVar = (name, fallback) => {
-                        const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-                        return isInvalidCssValue(v) ? fallback : v || fallback;
-                    };
-
-                    const effective = {
-                        primary: !isInvalidCssValue(colors.primary) ? colors.primary : currentVar('--primary', '#2563eb'),
-                        secondary: !isInvalidCssValue(colors.secondary) ? colors.secondary : currentVar('--secondary', '#6b7280'),
-                        background: !isInvalidCssValue(colors.background) ? colors.background : currentVar('--background', '#ffffff'),
-                        surface: !isInvalidCssValue(colors.surface) ? colors.surface : currentVar('--surface', '#f8f9fa'),
-                        text: !isInvalidCssValue(colors.text) ? colors.text : currentVar('--text', '#1a1a1a'),
-                        textSecondary: !isInvalidCssValue(colors.textSecondary) ? colors.textSecondary : currentVar('--text-secondary', '#6c757d')
-                    };
-
-                    // Set simplified color palette (guarded)
-                    safeSetCssVar('--primary', effective.primary);
-                    safeSetCssVar('--secondary', effective.secondary);
-                    safeSetCssVar('--background', effective.background);
-                    safeSetCssVar('--surface', effective.surface);
-                    safeSetCssVar('--text', effective.text);
-                    safeSetCssVar('--text-secondary', effective.textSecondary);
-
-                    // Set RGB version for gradients and overlays (guarded)
-                    safeSetCssVar('--prgb', hexToRgb(effective.primary));
-                    safeSetCssVar('--srgb', hexToRgb(effective.secondary));
-                    safeSetCssVar('--trgb', hexToRgb(effective.text));
-
-                    // Backward compatibility variables
-                    safeSetCssVar('--glass-bg', `rgba(${hexToRgb(effective.surface)}, 0.8)`);
-                    safeSetCssVar('--glass-border', `rgba(${hexToRgb(effective.secondary)}, 0.3)`);
-
-                    // PicoCSS compatibility variables
-                    safeSetCssVar('--pico-primary', effective.primary);
-                    safeSetCssVar('--pico-secondary', effective.secondary);
-                    safeSetCssVar('--pico-primary-background', effective.primary);
-                    safeSetCssVar('--pico-primary-inverse', 'white');
-                    safeSetCssVar('--pico-primary-focus', `rgba(${hexToRgb(effective.primary)}, 0.25)`);
-                    safeSetCssVar('--pico-primary-hover', `color-mix(in srgb, ${effective.primary} 90%, black)`);
-                    safeSetCssVar('--pico-h5-color', effective.text);
-                    safeSetCssVar('--pico-muted-border-color', effective.secondary);
-                    safeSetCssVar('--pico-del-color', effective.primary);
-                    safeSetCssVar('--pico-code-background-color', effective.surface);
-                    safeSetCssVar('--pico-code-border-color', effective.secondary);
-                }
-
-                // Re-render Mermaid diagrams if theme changed (but not during initial load)
-                if (oldTheme && oldTheme !== newTheme) {
-                    setTimeout(() => {
-                        reRenderMermaidDiagrams();
-                    }, 100);
-                }
-            }
 
             /**
              * Renders the entire presentation structure from JSON data
@@ -1723,12 +2247,14 @@
                             </div>`).join('');
                         return `<div class="kpi-grid">${cards}</div>`;
                     case 'blockquote':
-                        return `<blockquote>${block.value.text}<cite>- ${block.value.cite}</cite></blockquote>`;
+                        return `<blockquote>${block.value.text}${block.value.cite ? `<cite>- ${block.value.cite}</cite>` : ''}</blockquote>`;
                     case 'glossary':
                         const glossaryItems = (currentPresentationData?.glossary || []).map(item =>
                             `<dt>${item.term}</dt><dd>${item.definition}</dd>`
                         ).join('');
                         return `<dl class="glossary-list">${glossaryItems}</dl>`;
+                    case 'html':
+                        return block.value;
                     default:
                         return '';
                 }
@@ -1821,209 +2347,210 @@
             }
 
             /**
+             * Whitelisted merge of deck-level Mermaid config with base settings
+             */
+            const ALLOWED_TOP = new Set([
+                "theme", "fontFamily", "flowchart", "sequence", "gantt", "pie", "themeVariables"
+            ]);
+
+            function deepMergeAllowed(base, over) {
+                if (!over || typeof over !== 'object') return base;
+                const out = structuredClone(base);
+                for (const [k, v] of Object.entries(over)) {
+                    if (!ALLOWED_TOP.has(k)) continue;
+                    if (v && typeof v === 'object' && !Array.isArray(v)) {
+                        out[k] = deepMergeAllowed(out[k] || {}, v);
+                    } else {
+                        out[k] = v;
+                    }
+                }
+                return out;
+            }
+
+            /**
+             * Injects per-chart defaults when no init directive is present
+             */
+            function withPerChartInit(diagramText) {
+                if (/^\s*%%\{init:/m.test(diagramText)) return diagramText;
+                const m = /^\s*(gantt|graph|flowchart|sequenceDiagram|pie)\b/.exec(diagramText);
+                let type = m?.[1] || '';
+                if (type === 'graph') type = 'flowchart';
+                if (type === 'sequenceDiagram') type = 'sequence';
+                const defaults = currentPresentationData?.mermaid?.perChartDefaults?.[type];
+                return defaults
+                    ? `%%{init: ${JSON.stringify({ [type]: defaults })}}%%\n` + diagramText
+                    : diagramText;
+            }
+
+            /**
+             * Fixes Gantt chart axis label overlap by rotating labels
+             */
+            function tweakGanttAxisLabels(svg) {
+                if (!svg.querySelector('.gantt')) return;
+                svg.querySelectorAll('.gantt .xAxis .tick text').forEach(t => {
+                    t.setAttribute('transform', 'rotate(-30)');
+                    t.setAttribute('text-anchor', 'end');
+                    t.style.fontSize = '11px';
+                });
+            }
+
+            /**
              * Returns the centralized Mermaid configuration object
              */
-            function getMermaidConfig() {
-                // Determine theme mode, respecting system preference when auto
-                const themeAttr = document.documentElement.getAttribute('data-theme');
-                let themeMode = 'default';
-                if (themeAttr === 'dark') {
-                    themeMode = 'dark';
-                } else if (themeAttr === 'auto' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-                    themeMode = 'dark';
+            // Removed getMermaidConfig() - now using buildMermaidConfig() only
+
+            /* ---------- Mermaid single-render manager ---------- */
+            const MermaidManager = (() => {
+                function setStoredDef(el, def){ el.setAttribute('data-original-definition', btoa(encodeURIComponent(def))); }
+                function getStoredDef(el){
+                    const b64 = el.getAttribute('data-original-definition');
+                    if (b64) try { return decodeURIComponent(atob(b64)); } catch {}
+                    return el.textContent || '';
                 }
 
-                // Resolve current CSS variables, and if dark mode is in effect, force readable palette
-                function sanitizeColorValue(value) {
-                    const v = (value || '').trim();
-                    if (!v || v === 'undefined' || v === 'null' || v === 'NaN') return '';
-                    return v;
-                }
-                const colors = {
-                    primary: sanitizeColorValue(resolveCssVar('--primary')) || '#2563eb',
-                    secondary: sanitizeColorValue(resolveCssVar('--secondary')) || '#6b7280',
-                    background: sanitizeColorValue(resolveCssVar('--background')) || '#ffffff',
-                    surface: sanitizeColorValue(resolveCssVar('--surface')) || '#f8f9fa',
-                    text: sanitizeColorValue(resolveCssVar('--text')) || '#1a1a1a',
-                    textSecondary: sanitizeColorValue(resolveCssVar('--text-secondary')) || '#6c757d'
-                };
-
-                if (themeMode === 'dark') {
-                    // Ensure high-contrast defaults in dark mode regardless of page CSS variables
-                    colors.background = '#1a1a1a';
-                    colors.surface = '#2a2a2a';
-                    colors.text = '#ffffff';
-                    colors.textSecondary = '#a1a1aa';
+                async function renderStringInto(def, container) {
+                    if (!def) return;
+                    def = withPerChartInit(def);          // ← inject per-chart defaults
+                    mermaid.initialize(buildMermaidConfig());
+                    const id = `m-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                    const svg = await mermaid.render(id, def);
+                    container.innerHTML = svg;
+                    const s = container.querySelector('svg');
+                    if (s) {
+                        s.removeAttribute('width'); s.removeAttribute('height');
+                        s.setAttribute('preserveAspectRatio','xMinYMin meet');
+                        s.style.width = '100%'; s.style.height='auto';
+                    }
                 }
 
-                return {
-                    startOnLoad: false,
-                    theme: themeMode,
-                    securityLevel: 'loose',
-                    fontFamily: 'var(--pico-font-family)',
-                    flowchart: {
-                        useMaxWidth: false,
-                        htmlLabels: true,
-                        curve: 'basis',
-                        padding: 16,
-                        nodeSpacing: 50,
-                        rankSpacing: 60
-                    },
-                    sequence: {
-                        useMaxWidth: false,
-                        htmlLabels: true,
-                        diagramMarginX: 50,
-                        diagramMarginY: 10
-                    },
-                    gantt: {
-                        useMaxWidth: false,
-                        htmlLabels: true
-                    },
-                    pie: {
-                        useMaxWidth: true,
-                        htmlLabels: true
-                    },
-                    themeVariables: {
-                        primaryColor: colors.primary,
-                        primaryTextColor: colors.text,
-                        primaryBorderColor: colors.primary,
-                        lineColor: colors.primary,
-                        sectionBkgColor: colors.surface,
-                        altSectionBkgColor: colors.background,
-                        gridColor: colors.secondary,
-                        tertiaryColor: colors.secondary,
-                        edgeLabelBackground: colors.surface,
-                        fontSize: '16px',
-                        pieTitleTextSize: '20px',
-                        pieSectionTextSize: '14px',
-                        pieLegendTextSize: '14px'
-                    },
-                    themeCSS: `
-                        /* Essential Mermaid styling for proper rendering */
+                async function renderOnce(el) {
+                    let def = getStoredDef(el).trim();
+                    if (!def) return;
+                    def = withPerChartInit(def);          // ← inject per-chart defaults
+                    const id = `m-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                    const svg = await mermaid.render(id, def);
+                    el.innerHTML = svg;
+                    const s = el.querySelector('svg');
+                    if (s) {
+                        s.removeAttribute('width'); s.removeAttribute('height');
+                        s.setAttribute('preserveAspectRatio','xMinYMin meet');
+                        s.style.width = '100%'; s.style.height='auto';
+                    }
+                }
 
-                        /* Font consistency */
-                        .label, .edgeLabel {
-                          font-family: var(--pico-font-family);
-                        }
+                async function cloneInto(sourceEl, targetContainer) {
+                    const def = getStoredDef(sourceEl);
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mermaid-modal';
+                    await renderStringInto(def, wrapper);
+                    targetContainer.appendChild(wrapper);
+                }
 
-                        /* Node styling - provide sensible defaults but allow diagram overrides */
-                        .node rect, .node polygon, .node path, .node circle, .node ellipse {
-                          fill: ${colors.surface};
-                          stroke: ${colors.primary};
-                          stroke-width: 2px;
-                        }
-                        .node rect { rx: 8; ry: 8; }
+                async function rerenderAll() {
+                    mermaid.initialize(buildMermaidConfig());
+                    const els = document.querySelectorAll('.mermaid');
+                    for (const el of els) {
+                        const def = getStoredDef(el);
+                        if (!def) continue;
+                        el.textContent = def;      // reset to source
+                        await renderOnce(el);      // render fresh under new theme
+                    }
+                }
 
-                        /* Text elements - defaults, can be overridden by diagram styles or post-render adjuster */
-                        .label text, .nodeLabel, .edgeLabel text {
-                          fill: ${colors.text};
-                          font-weight: 500;
+                function initAll() {
+                    mermaid.initialize(buildMermaidConfig());
+                    document.querySelectorAll('.mermaid').forEach(el => {
+                        if (!el.getAttribute('data-original-definition')) {
+                            setStoredDef(el, el.textContent || '');
                         }
-                        /* Flowchart HTML labels (Mermaid uses <foreignObject>) */
-                        .label foreignObject div, .nodeLabel foreignObject div, .edgeLabel foreignObject div {
-                          color: ${colors.text};
-                        }
+                        renderOnce(el);
+                    });
+                }
 
-                        /* Flowchart connections */
-                        .edgePath path, .flowchart-link {
-                          stroke: ${colors.primary};
-                          stroke-width: 2px;
-                        }
-                        .edgePath .arrowheadPath, .arrowheadPath {
-                          fill: ${colors.primary};
-                          stroke: ${colors.primary};
-                        }
+                return { initAll, rerenderAll, cloneInto };
+            })();
 
-                        /* Light brand touch for flowcharts */
-                        .flowchart .node rect {
-                          stroke: ${colors.primary};
-                          stroke-width: 2px;
-                          rx: 8;
-                          ry: 8;
-                        }
-
-                        /* Sequence diagram styling */
-                        .sequence .actor {
-                          stroke: ${colors.primary};
-                          fill: ${colors.surface};
-                        }
-                        .sequence .actor-line {
-                          stroke: ${colors.primary};
-                        }
-                        .sequence .messageLine {
-                          stroke: ${colors.primary};
-                        }
-
-                        /* Gantt chart styling */
-                        .gantt .section {
-                          stroke: ${colors.primary};
-                        }
-                        .gantt .grid .tick line {
-                          stroke: ${colors.secondary};
-                        }
-
-                        /* Ensure text is readable */
-                        .label text, .nodeLabel, .edgeLabel text {
-                          font-weight: 500;
-                        }
-
-                        /* Global default */
-                        text, tspan { fill: ${colors.text}; }
-
-                        /* Pie specific: title and legend use current text color (allow external overrides) */
-                        g.legend text, .pieTitleText {
-                          fill: ${colors.text};
-                        }
-                    `
-                };
-            }
 
             /**
-             * Initializes Mermaid.js to render all diagrams
+             * Custom scroll-spy for TOC highlighting (replaces IntersectionObserver)
              */
-            function initializeMermaid() {
-                // Wait for Mermaid to be loaded
-                if (typeof mermaid === 'undefined') { setTimeout(initializeMermaid, 100); return; }
+            function initScrollSpy() {
+                const nav = document.getElementById('toc-nav');
+                const links = Array.from(document.querySelectorAll('#toc-nav a[data-section-id]'));
+                const sections = links
+                    .map(a => document.getElementById(a.dataset.sectionId))
+                    .filter(Boolean);
 
-                // Initialize Mermaid with centralized configuration
-                mermaid.initialize(getMermaidConfig());
+                const state = { items: [], activeId: null };
 
-                // Manually render all mermaid diagrams
-                setTimeout(renderMermaidDiagrams, 100);
-            }
+                const compute = () => {
+                    state.items = sections.map(el => {
+                        const top = window.scrollY + el.getBoundingClientRect().top;
+                        return { id: el.id, top };
+                    }).sort((a,b) => a.top - b.top);
+                };
 
-            /**
-             * Manually render all Mermaid diagrams in the page
-             */
-            function renderMermaidDiagrams() {
-                const mermaidElements = document.querySelectorAll('.mermaid');
-                if (mermaidElements.length === 0) return;
+                const setActive = (id) => {
+                    if (!id || id === state.activeId) return;
+                    state.activeId = id;
+                    links.forEach(a => {
+                        const isActive = a.dataset.sectionId === id;
+                        a.classList.toggle('active', isActive);
+                        if (isActive) a.setAttribute('aria-current', 'true');
+                        else a.removeAttribute('aria-current');
+                    });
 
-                mermaidElements.forEach((element, index) => {
-                    // Skip if already processed
-                    if (element.hasAttribute('data-processed')) return;
+                    // keep the active link visible inside a scrollbar-less nav
+                    const activeLink = links.find(a => a.dataset.sectionId === id);
+                    if (activeLink) {
+                        const r = activeLink.getBoundingClientRect();
+                        const nr = nav.getBoundingClientRect();
+                        if (r.top < nr.top || r.bottom > nr.bottom) {
+                            activeLink.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+                        }
+                    }
+                };
 
-                    const graphDefinition = element.textContent.trim();
-                    if (!graphDefinition) return;
+                const onScroll = () => {
+                    // choose a point slightly below the top of the viewport
+                    const anchor = window.scrollY + window.innerHeight * 0.35;
+                    let current = state.items[0]?.id;
+                    for (let i = 0; i < state.items.length; i++) {
+                        if (state.items[i].top <= anchor) current = state.items[i].id; else break;
+                    }
+                    setActive(current);
+                };
 
-                    try {
-                        // Use the older Mermaid API for better compatibility
-                        mermaid.render(`mermaid-${Date.now()}-${index}`, graphDefinition, (svgCode) => {
-                            element.innerHTML = svgCode;
-                            // Post-process for contrast after rendering
-                            try { adjustMermaidContrastForContainer(element); } catch (e) {}
-                            element.setAttribute('data-processed', 'true');
-                            // Store original definition for modal and re-rendering use
-                            // Encode to prevent any corruption
-                            element.setAttribute('data-original-definition', btoa(encodeURIComponent(graphDefinition)));
-                        }, element);
-                    } catch (error) {
-                        element.innerHTML = `<div style="background: var(--pico-code-background-color); padding: 1rem; border-radius: var(--pico-border-radius); border: 1px solid var(--pico-code-border-color);">
-                            <div style="color: var(--pico-del-color); margin-bottom: 0.5rem;">⚠️ Diagram rendering failed</div>
-                            <pre style="margin: 0; font-size: 0.85em; white-space: pre-wrap;">${graphDefinition.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}</pre>
-                        </div>`;
+                // handle clicks: prevent default jump, smooth scroll, update hash, set active
+                nav.addEventListener('click', (e) => {
+                    const a = e.target.closest('a[data-section-id]');
+                    if (!a) return;
+                    e.preventDefault();
+                    const id = a.dataset.sectionId;
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    setActive(id);
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' }); // respects your scroll-margin-top
+                    history.pushState(null, '', `#${id}`);
+                }, { signal: abortController.signal });
+
+                // recompute on load/resize/content changes
+                compute();
+                window.addEventListener('resize', throttle(compute, 100), { signal: abortController.signal });
+                window.addEventListener('load', compute, { once: true });
+
+                // Recompute when images finish loading (affects offsets)
+                document.querySelectorAll('#presentation-content img').forEach(img => {
+                    if (!img.complete) {
+                        img.addEventListener('load', throttle(compute, 100), { once: true, signal: abortController.signal });
                     }
                 });
+
+                // initial sync (direct links)
+                if (location.hash) setActive(location.hash.slice(1));
+                onScroll();
+
+                window.addEventListener('scroll', throttle(onScroll, 50), { signal: abortController.signal, passive: true });
             }
 
             /**
@@ -2044,19 +2571,8 @@
                 }, { threshold: 0.1 });
                 sectionsEls.forEach(section => animationObserver.observe(section));
 
-                // Intersection Observer for TOC highlighting
-                const tocObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const id = entry.target.getAttribute('id');
-                            tocLinks.forEach(link => {
-                                link.classList.toggle('active', link.getAttribute('data-section-id') === id);
-                            });
-                        }
-                    });
-                }, { rootMargin: '-50% 0px -50% 0px' });
-                // Now observe sections AND subsections for highlighting
-                document.querySelectorAll('section[id], article[id]').forEach(section => tocObserver.observe(section));
+                // Custom scroll-spy for TOC highlighting (replaces IntersectionObserver)
+                initScrollSpy();
 
                 // Scroll listener for progress bar (throttled for performance)
                 window.addEventListener('scroll', throttle(() => {
@@ -2071,13 +2587,12 @@
                 // Keyboard shortcuts
                 setupKeyboardNavigation(sections);
 
-                // Theme toggle
-                setupThemeToggle();
 
                 // Fullscreen toggle
                 setupFullscreenToggle();
 
-                
+                // TOC toggle
+                setupTocToggle();
 
                 // File upload
                 setupFileUpload();
@@ -2270,276 +2785,42 @@
             }
 
             /**
-             * Sets up theme toggle functionality
+             * Sets up TOC toggle functionality
              */
-            function setupThemeToggle() {
-                const themeBtn = document.getElementById('theme-toggle');
-                if (!themeBtn) return;
+            function setupTocToggle(){
+                const btn = document.getElementById('toc-toggle');
+                if (!btn) return;
 
-                let currentTheme = document.documentElement.getAttribute('data-theme') || 'auto';
+                const toggle = () => document.body.classList.toggle('toc-hidden');
 
-                function updateThemeButton() {
-                    const icon = themeBtn.querySelector('svg');
-                    if (currentTheme === 'dark') {
-                        icon.innerHTML = '<path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"></path>';
-                        themeBtn.setAttribute('title', 'Switch to Light Mode (T)');
-                    } else {
-                        icon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
-                        themeBtn.setAttribute('title', 'Switch to Dark Mode (T)');
-                    }
-                }
+                btn.addEventListener('click', toggle);
 
-                function toggleTheme() {
-                    if (currentTheme === 'dark') {
-                        currentTheme = 'light';
-                    } else if (currentTheme === 'light') {
-                        currentTheme = 'auto';
-                    } else {
-                        currentTheme = 'dark';
-                    }
-
-                    document.documentElement.setAttribute('data-theme', currentTheme);
-                    updateThemeButton();
-
-                    // Apply theme to all UI elements (not just Mermaid)
-                    // Use predefined theme colors based on mode
-                    const themeData = getThemeForMode(currentTheme);
-                    applyTheme(themeData);
-
-                    // Store preference in localStorage
-                    localStorage.setItem('preferred-theme', currentTheme);
-                }
-
-                function getThemeForMode(mode) {
-                    // Use the presentation's defined colors, just change light/dark variants
-                    let presentationColors = currentPresentationData?.theme?.colors;
-
-                    // Fallback to current CSS variables if presentation data not available
-                    if (!presentationColors) {
-                        presentationColors = {
-                            primary: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00853F',
-                            secondary: getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim() || '#64748b'
-                        };
-                    }
-
-                    if (mode === 'dark') {
-                        return {
-                            mode: 'dark',
-                            colors: {
-                                primary: presentationColors.primary,
-                                secondary: presentationColors.secondary,
-                                background: '#1a1a1a',
-                                surface: '#2a2a2a',
-                                text: '#ffffff',
-                                textSecondary: '#a1a1aa'
-                            }
-                        };
-                    } else if (mode === 'light') {
-                        return {
-                            mode: 'light',
-                            colors: {
-                                primary: presentationColors.primary,
-                                secondary: presentationColors.secondary,
-                                background: '#f8fafc',
-                                surface: '#ffffff',
-                                text: '#1e293b',
-                                textSecondary: '#64748b'
-                            }
-                        };
-                    } else { // auto
-                        return {
-                            mode: 'auto',
-                            colors: {
-                                primary: presentationColors.primary,
-                                secondary: presentationColors.secondary,
-                                background: '#f8fafc',
-                                surface: '#ffffff',
-                                text: '#1e293b',
-                                textSecondary: '#64748b'
-                            }
-                        };
-                    }
-                }
-
-                themeBtn.addEventListener('click', toggleTheme);
-
-                // Load saved preference
-                const savedTheme = localStorage.getItem('preferred-theme');
-                if (savedTheme) {
-                    currentTheme = savedTheme;
-                    document.documentElement.setAttribute('data-theme', currentTheme);
-
-                    // Apply the saved theme to CSS variables
-                    const themeData = getThemeForMode(currentTheme);
-                    applyTheme(themeData);
-                }
-
-                updateThemeButton();
-
-                // Add T key support for theme toggle
+                // Keyboard shortcut: H to show or hide TOC in both normal and fullscreen modes
                 document.addEventListener('keydown', (e) => {
-                    if (e.key === 't' || e.key === 'T') {
+                    if (e.key === 'h' || e.key === 'H') {
                         if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                             e.preventDefault();
-                            toggleTheme();
+                            toggle();
                         }
                     }
                 }, { signal: abortController.signal });
+
+                // Keep button fully visible in both modes
+                btn.style.opacity = '1';
             }
 
             /**
-             * Re-renders all Mermaid diagrams with current theme
+             * Sets up theme toggle functionality
              */
-            function reRenderMermaidDiagrams() {
-                // Re-initialize Mermaid with centralized configuration
-                mermaid.initialize(getMermaidConfig());
-
-                // Clear processed flags and re-render all diagrams
-                document.querySelectorAll('.mermaid').forEach(el => {
-                    el.removeAttribute('data-processed');
-                    // Put back the original Mermaid syntax
-                    const encodedDefinition = el.getAttribute('data-original-definition');
-                    if (encodedDefinition) {
-                        try {
-                            // Decode the stored definition
-                            const originalDefinition = decodeURIComponent(atob(encodedDefinition));
-                            el.innerHTML = originalDefinition;
-                            el.removeAttribute('data-original-definition'); // Clear for re-storage
-                        } catch (e) { el.innerHTML = el.textContent || ''; }
-                    } else { el.setAttribute('data-processed', 'true'); return; }
-                });
-
-                // Force re-render all diagrams
-                setTimeout(() => {
-                    const mermaidElements = document.querySelectorAll('.mermaid');
-                    mermaidElements.forEach((element, index) => {
-                        // Use innerHTML content which should now contain the original Mermaid syntax
-                        const graphDefinition = element.innerHTML.trim();
-                        if (!graphDefinition) return;
-
-                        try {
-                            mermaid.render(`mermaid-${Date.now()}-${index}`, graphDefinition, (svgCode) => {
-                                element.innerHTML = svgCode;
-                                // Post-process for contrast after re-render
-                                try { adjustMermaidContrastForContainer(element); } catch (e) {}
-                                element.setAttribute('data-processed', 'true');
-                                element.setAttribute('data-original-definition', btoa(encodeURIComponent(graphDefinition)));
-                            }, element);
-                        } catch (error) {
-                            element.innerHTML = `<div style="background: var(--pico-code-background-color); padding: 1rem; border-radius: var(--pico-border-radius); border: 1px solid var(--pico-code-border-color);">
-                                <div style="color: var(--pico-del-color); margin-bottom: 0.5rem;">⚠️ Diagram re-rendering failed</div>
-                                <pre style="margin: 0; font-size: 0.85em; white-space: pre-wrap;">${graphDefinition.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}</pre>
-                            </div>`;
-                        }
-                    });
-                }, 100);
+            function setupThemeToggle() {
+                const btn = document.getElementById('theme-toggle');
+                if (!btn) return;
+                const cycle = () => Theme.setMode(Theme.mode === 'dark' ? 'light' : 'dark', currentPresentationData);
+                btn.addEventListener('click', cycle);
             }
 
-            /**
-             * Contrast adjustment for Mermaid diagrams: ensure text contrasts with node backgrounds
-             */
-            function adjustMermaidContrastForContainer(container) {
-                const svg = container.querySelector('svg');
-                if (!svg) return;
-                adjustMermaidContrastInSvg(svg);
-            }
 
-            function adjustMermaidContrastInSvg(svg) {
-                function parseColorToRgbTuple(color) {
-                    const c = (color || '').trim();
-                    if (!c) return null;
-                    if (/^rgba?\(/i.test(c)) {
-                        const parts = c.replace(/^rgba?\(/i, '').replace(/\)\s*$/i, '').split(',').map(p => parseFloat(p.trim()));
-                        return { r: parts[0] || 0, g: parts[1] || 0, b: parts[2] || 0 };
-                    }
-                    const short = /^#([a-f\d])([a-f\d])([a-f\d])$/i.exec(c);
-                    if (short) {
-                        return {
-                            r: parseInt(short[1] + short[1], 16),
-                            g: parseInt(short[2] + short[2], 16),
-                            b: parseInt(short[3] + short[3], 16)
-                        };
-                    }
-                    const full = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
-                    if (full) {
-                        return {
-                            r: parseInt(full[1], 16),
-                            g: parseInt(full[2], 16),
-                            b: parseInt(full[3], 16)
-                        };
-                    }
-                    return null;
-                }
-
-                function toLinear(channel) {
-                    const s = channel / 255;
-                    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-                }
-
-                function relativeLuminance(r, g, b) {
-                    const R = toLinear(r), G = toLinear(g), B = toLinear(b);
-                    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-                }
-
-                function contrastRatio(l1, l2) {
-                    const a = Math.max(l1, l2);
-                    const b = Math.min(l1, l2);
-                    return (a + 0.05) / (b + 0.05);
-                }
-
-                function adjustGroup(groupSelector, shapeSelector) {
-                    svg.querySelectorAll(groupSelector).forEach(group => {
-                        const shape = group.querySelector(shapeSelector);
-                        if (!shape) return;
-                        let fill = window.getComputedStyle(shape).fill;
-                        if (!fill || fill === 'none') {
-                            fill = shape.getAttribute('fill') || '';
-                        }
-                        const rgb = parseColorToRgbTuple(fill);
-                        if (!rgb) return;
-                        const lBg = relativeLuminance(rgb.r, rgb.g, rgb.b);
-                        const blackContrast = contrastRatio(lBg, 0);
-                        const whiteContrast = contrastRatio(lBg, 1);
-                        const useWhite = whiteContrast >= blackContrast;
-                        const desired = useWhite ? '#ffffff' : '#111111';
-
-                        group.querySelectorAll('text').forEach(t => {
-                            try { t.style.setProperty('fill', desired, 'important'); } catch (_) {}
-                        });
-                        group.querySelectorAll('foreignObject div').forEach(d => {
-                            try { d.style.setProperty('color', desired, 'important'); } catch (_) {}
-                        });
-                    });
-                }
-
-                adjustGroup('g.node', 'rect, polygon, path, circle, ellipse');
-                adjustGroup('g.cluster', 'rect');
-                adjustGroup('g.edgeLabel', 'rect');
-                // Pie slices
-                adjustGroup('g.section', 'path');
-
-                // Dedicated handling for Mermaid pie charts (slices and their labels)
-                (function adjustPieSlices() {
-                    const sliceGroups = svg.querySelectorAll('g.slice, g.arc, g[class*="slice" i], g[class*="arc" i]');
-                    sliceGroups.forEach(group => {
-                        const path = group.querySelector('path');
-                        if (!path) return;
-                        let fill = window.getComputedStyle(path).fill || path.getAttribute('fill') || '';
-                        const rgb = parseColorToRgbTuple(fill);
-                        if (!rgb) return;
-                        const lBg = relativeLuminance(rgb.r, rgb.g, rgb.b);
-                        const blackContrast = contrastRatio(lBg, 0);
-                        const whiteContrast = contrastRatio(lBg, 1);
-                        const useWhite = whiteContrast >= blackContrast;
-                        const desired = useWhite ? '#ffffff' : '#111111';
-                        group.querySelectorAll('text').forEach(t => {
-                            try { t.style.setProperty('fill', desired, 'important'); } catch (_) {}
-                        });
-                    });
-                })();
-            }
-
-            
+            // Removed contrast adjustment functions - unified theming eliminates the need
 
             /**
              * Sets up file upload functionality
@@ -2561,8 +2842,9 @@
                     if (!file) return;
 
                     // Check file type
-                    if (!file.name.toLowerCase().endsWith('.json')) {
-                        alert('Please select a JSON file.');
+                    const fileName = file.name.toLowerCase();
+                    if (!fileName.endsWith('.json') && !fileName.endsWith('.md')) {
+                        alert('Please select a JSON or Markdown file.');
                         return;
                     }
 
@@ -2575,15 +2857,22 @@
 
                         // Read file content
                         const fileContent = await readFileAsText(file);
-                        const jsonData = JSON.parse(fileContent);
+                        let data;
 
-                        // Validate basic structure
-                        if (!jsonData.title || !jsonData.sections) {
-                            throw new Error('Invalid presentation format. Missing required fields.');
+                        if (fileName.endsWith('.md')) {
+                            // Parse Markdown
+                            data = parseMarkdownToPresentation(fileContent);
+                        } else {
+                            // Parse JSON
+                            data = JSON.parse(fileContent);
+                            // Validate basic structure
+                            if (!data.title || !data.sections) {
+                                throw new Error('Invalid presentation format. Missing required fields.');
+                            }
                         }
 
                         // Reload presentation with new data (navigation processing happens in reloadPresentation)
-                        await reloadPresentation(jsonData);
+                        await reloadPresentation(data);
 
                         
 
@@ -2621,6 +2910,56 @@
                     reader.onerror = (e) => reject(new Error('Failed to read file'));
                     reader.readAsText(file);
                 });
+            }
+
+            /**
+             * Glossary tooltip: prevent overflow by positioning within viewport
+             */
+            function setupGlossaryTooltip() {
+                const tooltip = document.getElementById('glossary-tooltip');
+                if (!tooltip) return;
+
+                function positionTooltip(target) {
+                    const rect = target.getBoundingClientRect();
+                    const tipRect = tooltip.getBoundingClientRect();
+                    const margin = 8;
+                    let top = rect.top - tipRect.height - margin;
+                    if (top < margin) top = rect.bottom + margin;
+                    let left = rect.left + rect.width / 2 - tipRect.width / 2;
+                    if (left < margin) left = margin;
+                    const maxLeft = window.innerWidth - tipRect.width - margin;
+                    if (left > maxLeft) left = maxLeft;
+                    tooltip.style.top = `${Math.round(top)}px`;
+                    tooltip.style.left = `${Math.round(left)}px`;
+                }
+
+                function showTooltip(target) {
+                    const def = target.getAttribute('data-definition');
+                    if (!def) return;
+                    tooltip.textContent = def;
+                    tooltip.style.display = 'block';
+                    positionTooltip(target);
+                    tooltip.setAttribute('aria-hidden', 'false');
+                }
+
+                function hideTooltip() {
+                    tooltip.style.display = 'none';
+                    tooltip.setAttribute('aria-hidden', 'true');
+                }
+
+                document.addEventListener('mouseover', (e) => {
+                    const d = e.target.closest('dfn');
+                    if (d) showTooltip(d); else hideTooltip();
+                }, { signal: abortController.signal });
+
+                document.addEventListener('mousemove', (e) => {
+                    const d = e.target.closest('dfn');
+                    if (d && tooltip.style.display === 'block') positionTooltip(d);
+                }, { signal: abortController.signal });
+
+                document.addEventListener('mouseout', (e) => {
+                    if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('dfn')) hideTooltip();
+                }, { signal: abortController.signal });
             }
 
             /**
@@ -2665,10 +3004,28 @@
                         const modalBody = document.getElementById('modal-body');
                         const figcaption = e.target.closest('figure').querySelector('figcaption');
 
-                        modalBody.innerHTML = `
-                            <img src="${e.target.src}" alt="${e.target.alt}" style="max-width: 100%; max-height: 70vh; object-fit: contain;">
-                            ${figcaption ? `<p style="margin-top: 1rem; color: var(--pico-secondary); font-style: italic;">${figcaption.textContent}</p>` : ''}
-                        `;
+                        const wrapper = document.createElement('div');
+                        const img = document.createElement('img');
+                        img.src = e.target.src;
+                        img.alt = e.target.alt || '';
+                        img.style.maxWidth = '100%';
+                        img.style.maxHeight = '80vh';
+                        img.style.objectFit = 'contain';
+                        wrapper.appendChild(img);
+
+                        if (figcaption && figcaption.textContent.trim().length > 0) {
+                            const cap = document.createElement('p');
+                            cap.textContent = figcaption.textContent;
+                            cap.style.marginTop = '0.75rem';
+                            cap.style.color = 'var(--text)';
+                            cap.style.opacity = '0.9';
+                            cap.style.fontStyle = 'italic';
+                            cap.style.textAlign = 'center';
+                            wrapper.appendChild(cap);
+                        }
+
+                        modalBody.innerHTML = '';
+                        modalBody.appendChild(wrapper);
 
                         modal.classList.add('show');
                     }
@@ -2685,48 +3042,9 @@
                         const diagram = e.target.closest('.mermaid');
                         const modal = document.getElementById('modal-overlay');
                         const modalBody = document.getElementById('modal-body');
-
-                        // APPROCHE SIMPLIFIÉE: Cloner le SVG existant au lieu de le rerendre
-                        const existingSvg = diagram.querySelector('svg');
-                        if (existingSvg) {
-
-                            // Create modal container
-                            const modalDiagram = document.createElement('div');
-                            modalDiagram.className = 'mermaid-modal';
-                            modalDiagram.style.background = 'var(--surface)';
-                            modalDiagram.style.padding = '1rem';
-                            modalDiagram.style.borderRadius = '12px';
-
-                            // Clone the SVG
-                            const clonedSvg = existingSvg.cloneNode(true);
-
-                            // Make it bigger for the modal
-                            clonedSvg.style.width = 'min(96vw, 1400px)';
-                            clonedSvg.style.height = 'auto';
-                            clonedSvg.style.display = 'block';
-                            clonedSvg.style.margin = '0 auto';
-                            clonedSvg.style.maxHeight = '80vh';
-
-                            // Add title if it exists
-                            const title = diagram.querySelector('h2, h3, h4');
-                            if (title) {
-                                const titleClone = title.cloneNode(true);
-                                titleClone.style.textAlign = 'center';
-                                titleClone.style.marginBottom = '1rem';
-                                modalDiagram.appendChild(titleClone);
-                            }
-
-                            // Add the cloned SVG
-                            modalDiagram.appendChild(clonedSvg);
-
-                            // Show modal
-                            modalBody.innerHTML = '';
-                            modalBody.appendChild(modalDiagram);
-                            modal.classList.add('show');
-                        } else {
-                            modalBody.innerHTML = '<div style="color: red; padding: 1rem;">Erreur: Aucun SVG trouvé</div>';
-                            modal.classList.add('show');
-                        }
+                        modalBody.innerHTML = '';
+                        MermaidManager.cloneInto(diagram, modalBody);
+                        modal.classList.add('show');
                     }
                 }, { signal: abortController.signal });
             }
@@ -2738,462 +3056,19 @@
                 setupModalFunctionality();
                 makeImagesClickable();
                 makeMermaidClickable();
+                setupGlossaryTooltip();
             }
 
             // Start the application
-            init().catch(() => {});
-        });
+            document.addEventListener('DOMContentLoaded', async () => {
+                await Theme.init();                // set CSS vars once
+                init();                             // renders landing or uploaded deck
+                setupThemeToggle();                 // binary Light↔Dark
+                Theme.onChange(() => MermaidManager.rerenderAll()); // recolor charts on theme change
+            });
     </script>
+    <div id="glossary-tooltip" role="tooltip" aria-hidden="true"></div>
     
-    <!--
-        Embedded Presentation JSON Schema
-        - Purpose: Make the schema available directly in the single-file build (no extra downloads).
-        - Visibility: Not used by the UI; just present in source for reference/validation tooling.
-        - Usage: View source and copy the JSON below if you need the schema.
-        - Note: Keep as-is to avoid extra network requests and preserve single-file setup.
-    -->
-    <script type="application/schema+json" id="presentation-schema">
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Narrative Presentation Schema",
-  "description": "🎨 Complete presentation system with 6-color theme palette. Easily customize colors for buttons, diagrams, text, and backgrounds. Auto-adapts to light/dark themes.",
-  "type": "object",
-  "properties": {
-    "title": {
-      "type": "string",
-      "description": "The overall title of the presentation, used for the browser tab."
-    },
-    "theme": {
-      "type": "object",
-      "description": "🎨 Complete theme system with 6 core colors. Automatically adapts all UI elements including Mermaid diagrams, buttons, hero section, and navigation.",
-      "properties": {
-        "mode": {
-          "type": "string",
-          "enum": [
-            "light",
-            "dark",
-            "auto"
-          ],
-          "description": "Theme mode. 'auto' detects system preference. Toggle with T key or theme button.",
-          "default": "auto",
-          "examples": [
-            "auto",
-            "light",
-            "dark"
-          ]
-        },
-        "colors": {
-          "type": "object",
-          "description": "📋 6-color palette - the only colors you need to customize your entire presentation!",
-          "properties": {
-            "primary": {
-              "type": "string",
-              "format": "color",
-              "description": "🔵 Main brand color - buttons, links, accents, Mermaid diagram elements",
-              "example": "#2563eb",
-              "default": "#2563eb"
-            },
-            "secondary": {
-              "type": "string",
-              "format": "color",
-              "description": "⚪ Secondary color - borders, muted elements, supporting UI",
-              "example": "#6b7280",
-              "default": "#6b7280"
-            },
-            "background": {
-              "type": "string",
-              "format": "color",
-              "description": "🏠 Main page background - hero section, body background",
-              "example": "#ffffff",
-              "default": "#ffffff"
-            },
-            "surface": {
-              "type": "string",
-              "format": "color",
-              "description": "📦 Card/surface background - Mermaid containers, highlight cards",
-              "example": "#f8f9fa",
-              "default": "#f8f9fa"
-            },
-            "text": {
-              "type": "string",
-              "format": "color",
-              "description": "📝 Primary text color - headings, main content",
-              "example": "#1a1a1a",
-              "default": "#1a1a1a"
-            },
-            "text-secondary": {
-              "type": "string",
-              "format": "color",
-              "description": "📝 Secondary text color - descriptions, muted text",
-              "example": "#6c757d",
-              "default": "#6c757d"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "primary",
-            "secondary",
-            "background",
-            "surface",
-            "text",
-            "text-secondary"
-          ]
-        }
-      },
-      "examples": [
-        {
-          "description": "✨ Default Light Theme",
-          "mode": "light",
-          "colors": {
-            "primary": "#2563eb",
-            "secondary": "#6b7280",
-            "background": "#ffffff",
-            "surface": "#f8f9fa",
-            "text": "#1a1a1a",
-            "text-secondary": "#6c757d"
-          }
-        },
-        {
-          "description": "🌙 Professional Dark Theme",
-          "mode": "dark",
-          "colors": {
-            "primary": "#60a5fa",
-            "secondary": "#9ca3af",
-            "background": "#1a1a1a",
-            "surface": "#2a2a2a",
-            "text": "#ffffff",
-            "text-secondary": "#9ca3af"
-          }
-        },
-        {
-          "description": "🌈 Custom Brand Colors",
-          "mode": "auto",
-          "colors": {
-            "primary": "#e11d48",
-            "secondary": "#64748b",
-            "background": "#fefefe",
-            "surface": "#f1f5f9",
-            "text": "#0f172a",
-            "text-secondary": "#64748b"
-          }
-        }
-      ]
-    },
-    "navigation": {
-      "type": "object",
-      "description": "Navigation configuration for custom section order",
-      "properties": {
-        "order": {
-          "type": "array",
-          "description": "Array of section/subsection IDs defining custom navigation order",
-          "items": {
-            "type": "string",
-            "description": "Section or subsection ID that must exist in the presentation"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "hero": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "highlights": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "metric": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              },
-              "label": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "metric",
-              "value",
-              "label"
-            ]
-          }
-        },
-        "callToAction": {
-          "type": "object",
-          "properties": {
-            "text": {
-              "type": "string"
-            },
-            "link": {
-              "type": "string",
-              "description": "A link URL - either an anchor link (e.g., '#section-id') or external URL (e.g., 'https://example.com')"
-            }
-          },
-          "required": [
-            "text",
-            "link"
-          ]
-        },
-        "callToActions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string"
-              },
-              "link": {
-                "type": "string",
-                "description": "An anchor link, e.g., '#section-id'"
-              },
-              "primary": {
-                "type": "boolean",
-                "description": "Whether this is the primary action button"
-              }
-            },
-            "required": [
-              "text",
-              "link"
-            ]
-          }
-        }
-      },
-      "required": [
-        "title",
-        "subtitle"
-      ]
-    },
-    "glossary": {
-      "type": "array",
-      "description": "A list of terms and definitions for automatic highlighting and tooltips.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "term": {
-            "type": "string"
-          },
-          "definition": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "term",
-          "definition"
-        ]
-      }
-    },
-    "sections": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/section"
-      }
-    }
-  },
-  "required": [
-    "title",
-    "sections"
-  ],
-  "definitions": {
-    "contentBlock": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "paragraph",
-            "image",
-            "mermaid",
-            "kpi-grid",
-            "blockquote",
-            "glossary"
-          ]
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "oneOf": [
-        {
-          "properties": {
-            "type": {
-              "const": "paragraph"
-            },
-            "value": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "value"
-          ]
-        },
-        {
-          "properties": {
-            "type": {
-              "const": "image"
-            },
-            "value": {
-              "type": "object",
-              "properties": {
-                "src": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "alt": {
-                  "type": "string"
-                },
-                "caption": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "src",
-                "alt"
-              ]
-            }
-          },
-          "required": [
-            "value"
-          ]
-        },
-        {
-          "properties": {
-            "type": {
-              "const": "mermaid"
-            },
-            "value": {
-              "type": "string",
-              "description": "Valid Mermaid.js syntax. Diagrams automatically adapt to the current theme (light/dark/auto). Lines, nodes, and text colors are themed to match the presentation colors. Supported diagram types: flowchart, sequence, gantt, pie, and more."
-            }
-          },
-          "required": [
-            "value"
-          ]
-        },
-        {
-          "properties": {
-            "type": {
-              "const": "kpi-grid"
-            },
-            "value": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "label",
-                  "value"
-                ]
-              }
-            }
-          },
-          "required": [
-            "value"
-          ]
-        },
-        {
-          "properties": {
-            "type": {
-              "const": "blockquote"
-            },
-            "value": {
-              "type": "object",
-              "properties": {
-                "text": {
-                  "type": "string"
-                },
-                "cite": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "text"
-              ]
-            }
-          },
-          "required": [
-            "value"
-          ]
-        },
-        {
-          "properties": {
-            "type": {
-              "const": "glossary"
-            }
-          },
-          "description": "A placeholder block that will be automatically populated with the glossary."
-        }
-      ]
-    },
-    "subsection": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique ID for anchor linking."
-        },
-        "title": {
-          "type": "string"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/contentBlock"
-          }
-        }
-      },
-      "required": [
-        "id",
-        "title",
-        "content"
-      ]
-    },
-    "section": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique ID for anchor linking."
-        },
-        "title": {
-          "type": "string"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/contentBlock"
-          }
-        },
-        "subsections": {
-          "type": "array",
-          "description": "An optional array of subsections for creating a hierarchy.",
-          "items": {
-            "$ref": "#/definitions/subsection"
-          }
-        }
-      },
-      "required": [
-        "id",
-        "title",
-        "content"
-      ]
-    }
-  }
-}
-    </script>
 </body>
 </html>
 
