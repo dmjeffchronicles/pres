@@ -8,7 +8,9 @@
     
     
     <link rel="stylesheet" href="vendor/pico.min.css"/>
-
+    <!-- Optional: Google Fonts for webfont support in exports -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
     
     <style>
         
@@ -1134,14 +1136,26 @@
         }
 
         
-        .btn-primary, .btn-secondary {
+        /* Button specificity to override Pico styles */
+        .btn-primary, .btn-secondary,
+        a.btn-primary, a.btn-secondary,
+        .hero a[role="button"].btn-primary,
+        .hero a[role="button"].btn-secondary {
             display: inline-block; padding: .75rem 1.25rem; border-radius: var(--pico-border-radius);
             text-decoration: none; border: 1px solid transparent; cursor: pointer;
         }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { filter: brightness(0.95); }
-        .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--secondary); }
-        .btn-secondary:hover { background: color-mix(in srgb, var(--surface) 85%, var(--secondary)); }
+        .btn-primary,
+        a.btn-primary,
+        .hero a[role="button"].btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover,
+        a.btn-primary:hover,
+        .hero a[role="button"].btn-primary:hover { filter: brightness(0.95); }
+        .btn-secondary,
+        a.btn-secondary,
+        .hero a[role="button"].btn-secondary { background: var(--surface); color: var(--text); border-color: var(--secondary); }
+        .btn-secondary:hover,
+        a.btn-secondary:hover,
+        .hero a[role="button"].btn-secondary:hover { background: color-mix(in srgb, var(--surface) 85%, var(--secondary)); }
         .info-chips { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
         .chip { padding: .35rem .6rem; border: 1px solid var(--secondary); border-radius: 999px; font-size: .9rem; color: var(--text-secondary); }
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
@@ -1232,6 +1246,64 @@
         }
 
     </style>
+
+    <style media="print">
+      /* Paper size: switch to A4 if needed */
+      @page { size: Letter; margin: 12.7mm; } /* 0.5in */
+
+      /* Ensure full document can paginate */
+      html, body { height: auto !important; overflow: visible !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      /* Hide UI chrome not meant for paper */
+      #nav-controls, #progress-bar, #modal-overlay, .landing-controls, .lang-switch,
+      .no-print, .btn-primary, .btn-secondary { display: none !important; }
+
+      /* One column layout for print */
+      .layout-wrapper, .grid-with-rail {
+        display: block !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      #toc-nav { display: none !important; }
+      #presentation-content.container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+
+      /* Reset sticky/fixed to avoid cutting */
+      [style*="position:sticky"], [style*="position: fixed"], aside, header, nav {
+        position: static !important;
+        top: auto !important; left: auto !important; right: auto !important;
+      }
+
+      /* Avoid random splits inside atomic blocks */
+      h1, h2, h3, h4 { break-after: avoid; break-inside: avoid; }
+      p, li { orphans: 3; widows: 3; }
+
+      figure, img, svg, table, pre, blockquote,
+      .mermaid, .kpi-grid, .kpi-card, .admonition,
+      article.subsection {
+        break-inside: avoid; page-break-inside: avoid;
+      }
+
+      /* Optional: start each top-level section on a new page */
+      section + section { break-before: page; }
+
+      /* Mermaid diagrams scale to page width */
+      .mermaid svg { width: 100% !important; height: auto !important; }
+
+      /* KPI tiles should stay intact */
+      .kpi-grid { gap: 12pt !important; }
+      .kpi-grid > * { break-inside: avoid; }
+
+      /* Links show their targets on paper */
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .8em; word-break: break-all; }
+
+      /* Manual page break utility */
+      .page-break { break-before: page; }
+    </style>
 </head>
 <body>
     
@@ -1276,6 +1348,13 @@
                 <rect x="13" y="4" width="8" height="3"></rect>
                 <rect x="13" y="9" width="8" height="3"></rect>
                 <rect x="13" y="14" width="8" height="6"></rect>
+            </svg>
+        </button>
+        <button id="export-html" class="no-print" aria-label="Export as single HTML" title="Export as single HTML">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12"></path>
+                <path d="M7 10l5 5 5-5"></path>
+                <path d="M5 21h14"></path>
             </svg>
         </button>
     </div>
@@ -1352,7 +1431,7 @@
                     return `${parseInt(m[1],16)}, ${parseInt(m[2],16)}, ${parseInt(m[3],16)}`;
                 };
 
-                function applyCss(p) {
+                function applyCss(p, pd) {
                     const root = document.documentElement;
                     root.setAttribute('data-theme', mode);
                     root.style.setProperty('--primary', p.primary);
@@ -1371,6 +1450,9 @@
                     root.style.setProperty('--pico-primary-inverse', '#fff');
                     root.style.setProperty('--pico-primary-focus', `rgba(${toRgb(p.primary)}, .25)`);
                     root.style.setProperty('--pico-primary-hover', `color-mix(in srgb, ${p.primary} 90%, black)`);
+                    root.style.setProperty('--pico-font-family',
+                      (pd?.theme?.fontFamily) || 'system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+                    );
                     root.style.setProperty('--pico-h5-color', p.text);
                     root.style.setProperty('--pico-muted-border-color', p.secondary);
                     root.style.setProperty('--pico-del-color', p.primary);
@@ -1379,7 +1461,7 @@
                 }
 
                 async function apply(pd = window.currentPresentationData) {
-                    applyCss(getPalette(pd, mode));
+                    applyCss(getPalette(pd, mode), pd);
                     await new Promise(r => requestAnimationFrame(r));
                     listeners.forEach(fn => fn({ mode }));
                 }
@@ -3068,7 +3150,219 @@
             });
     </script>
     <div id="glossary-tooltip" role="tooltip" aria-hidden="true"></div>
-    
+
+    <script>
+      (function () {
+        function prepForPrint() {
+          // Open any collapsible bits if we add some later
+          document.querySelectorAll('details').forEach(d => d.setAttribute('open', 'open'));
+          // Let layouts and charts settle
+          window.dispatchEvent(new Event('resize'));
+        }
+        if (window.matchMedia) {
+          const mq = window.matchMedia('print');
+          if (mq.addEventListener) mq.addEventListener('change', e => e.matches && prepForPrint());
+          else if (mq.addListener) mq.addListener(e => e.matches && prepForPrint());
+        }
+        window.addEventListener('beforeprint', prepForPrint);
+      })();
+    </script>
+
+    <script>
+    (async function () {
+      const rootSelectorOrder = ['.layout-wrapper', '#presentation-content', 'main', '#app', 'body'];
+
+      const toDataURL = async (absUrl) => {
+        const res = await fetch(absUrl, { mode: 'cors' });
+        if (!res.ok) throw new Error('Fetch failed: ' + absUrl);
+        const blob = await res.blob();
+        return await new Promise((resolve) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result);
+          r.readAsDataURL(blob);
+        });
+      };
+
+      const rewriteCssUrlsToData = async (cssText, baseHref) => {
+        // crude but effective url(...) rewriter that skips data: and blob:
+        const urlRE = /url\(\s*(?!['"]?(?:data|blob):)([^)]+)\)/g;
+        const found = [];
+        cssText.replace(urlRE, (_, raw) => {
+          const u = raw.trim().replace(/^['"]|['"]$/g, '');
+          const abs = new URL(u, baseHref).href;
+          found.push({ raw, abs });
+          return _;
+        });
+        const dataURIs = await Promise.all(found.map(f => toDataURL(f.abs).catch(() => null)));
+        let i = 0;
+        return cssText.replace(urlRE, (m) => {
+          const data = dataURIs[i++] ? `url("${dataURIs[i-1]}")` : m;
+        });
+      };
+
+      const collectAndInlineStyles = async () => {
+        let cssBundle = '';
+
+        // Inline external stylesheets <link rel="stylesheet">
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        for (const link of links) {
+          try {
+            const href = new URL(link.getAttribute('href'), document.baseURI).href;
+            const css = await (await fetch(href)).text();
+            const inlined = await rewriteCssUrlsToData(css, href);
+            cssBundle += `\n/* ${href} */\n` + inlined + '\n';
+          } catch (e) {
+            console.warn('Failed to inline CSS:', e);
+          }
+        }
+
+        // Include inline <style> blocks as-is, including our print CSS
+        const styleTags = Array.from(document.querySelectorAll('style'));
+        for (const s of styleTags) cssBundle += '\n/* inline <style> */\n' + s.textContent + '\n';
+
+        return cssBundle;
+      };
+
+      const inlineImagesIn = async (root) => {
+        const imgs = Array.from(root.querySelectorAll('img[src]'));
+        for (const img of imgs) {
+          try {
+            const abs = new URL(img.getAttribute('src'), document.baseURI).href;
+            img.setAttribute('src', await toDataURL(abs));
+            // Persist intrinsic size to reduce layout shifts
+            if (img.naturalWidth) img.setAttribute('width', img.naturalWidth);
+            if (img.naturalHeight) img.setAttribute('height', img.naturalHeight);
+          } catch (e) {
+            console.warn('Image inline failed', e);
+          }
+        }
+      };
+
+      const inlineCanvasesIn = (root) => {
+        const canvases = Array.from(root.querySelectorAll('canvas'));
+        for (const c of canvases) {
+          try {
+            const data = c.toDataURL('image/png');
+            const img = document.createElement('img');
+            img.src = data;
+            img.width = c.width;
+            img.height = c.height;
+            c.replaceWith(img);
+          } catch (e) {
+            console.warn('Canvas snapshot failed', e);
+          }
+        }
+      };
+
+      // NEW: find every custom prop name present in the bundled CSS
+      function collectCustomPropNames(cssText) {
+        const names = new Set();
+
+        // --var-name: ... (definitions)
+        const defRE = /(--[a-zA-Z0-9_-]+)\s*:/g;
+        let m;
+        while ((m = defRE.exec(cssText))) names.add(m[1]);
+
+        // var(--var-name) (usages)
+        const useRE = /var\(\s*(--[a-zA-Z0-9_-]+)/g;
+        while ((m = useRE.exec(cssText))) names.add(m[1]);
+
+        // make sure key tokens are present even if not matched above
+        ['--primary','--secondary','--background','--surface','--text','--text-secondary'].forEach(n => names.add(n));
+        return [...names].sort();
+      }
+
+      // NEW: build :root override from computed values + lock body font-family
+      function dumpComputedVarsFromCss(cssText) {
+        const vars = collectCustomPropNames(cssText);
+        const cs = getComputedStyle(document.documentElement);
+        const pieces = [];
+        for (const name of vars) {
+          const v = cs.getPropertyValue(name).trim();
+          if (v) pieces.push(`${name}: ${v};`);
+        }
+        const bodyFont = getComputedStyle(document.body).fontFamily;
+        const fontLock = bodyFont ? `\nbody{font-family:${bodyFont};}` : '';
+        return pieces.length ? `:root{${pieces.join('')}}${fontLock}` : fontLock;
+      }
+
+      const buildDocument = (title, cssText, bodyHTML) => {
+        // Stamp computed runtime variables after all other CSS
+        const stampedVars = dumpComputedVarsFromCss(cssText);
+        const finalCss = stampedVars ? `${cssText}\n/* resolved vars */\n${stampedVars}` : cssText;
+
+        // Preserve data-theme attribute
+        const dataTheme = document.documentElement.getAttribute('data-theme');
+        const themeAttr = dataTheme ? ` data-theme="${dataTheme}"` : '';
+
+        return [
+          '<!DOCTYPE html>',
+          `<html lang="${document.documentElement.lang || 'fr'}"${themeAttr}>`,
+          '<head>',
+          '<meta charset="utf-8">',
+          '<meta name="viewport" content="width=device-width, initial-scale=1">',
+          '<title>' + String(title || 'Presentation').replace(/</g, '&lt;') + '</title>',
+          '<style>',
+          '/* Bundled styles (external + inline) */',
+          finalCss,
+          '</style>',
+          '</head>',
+          '<body>',
+          bodyHTML,
+          '</body>',
+          '</html>'
+        ].join('\n');
+      };
+
+      const slugify = (s) =>
+        (s || 'presentation').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+      const download = (filename, text) => {
+        const blob = new Blob([text], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+
+      async function exportSingleHTML() {
+        // Make sure dynamic stuff is laid out
+        document.querySelectorAll('details').forEach(d => d.setAttribute('open', 'open'));
+        window.dispatchEvent(new Event('resize'));
+
+        // Clone only the presentation area
+        const rootSel = rootSelectorOrder.find(sel => document.querySelector(sel));
+        const root = document.querySelector(rootSel);
+        const clone = root.cloneNode(true);
+
+        // Remove any modal overlays that might be inside the clone
+        Array.from(clone.querySelectorAll('#modal-overlay')).forEach(n => n.remove());
+
+        // Inline images and canvases
+        await inlineImagesIn(clone);
+        inlineCanvasesIn(clone);
+
+        // Gather and inline CSS, including print rules
+        const cssText = await collectAndInlineStyles();
+
+        // Strip any scripts present in the clone
+        Array.from(clone.querySelectorAll('script')).forEach(s => s.remove());
+
+        // Build and download the file
+        const title = document.title || 'Presentation';
+        const html = buildDocument(title, cssText, clone.outerHTML);
+        download(slugify(title) + '.html', html);
+      }
+
+      document.getElementById('export-html')?.addEventListener('click', () => {
+        exportSingleHTML().catch(err => {
+          console.error(err);
+          alert('Export failed. See console for details.');
+        });
+      });
+    })();
+    </script>
+
 </body>
 </html>
 
